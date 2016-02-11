@@ -98,7 +98,7 @@ if __name__ == '__main__':
     yaw = 0.0
     print (" Reading Data of Gyroscope and Accelerometer")
 
-    while True:
+    while not rospy.is_shutdown():
         
         #Read Accelerometer raw value
         acc_x = read_raw_data(ACCEL_XOUT_H)

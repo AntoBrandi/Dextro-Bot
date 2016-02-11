@@ -65,7 +65,7 @@ def publish_range():
     pub.publish(sensor_range)
  
 if __name__ == '__main__':
-    while True:
+    while not rospy.is_shutdown():
         get_distance()
         publish_range()
         # wait before the next itheration

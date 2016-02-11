@@ -9,9 +9,9 @@ from sensor_msgs.msg import Range
 GPIO.setmode(GPIO.BOARD)
  
 #set GPIO Pins
-GPIO_TRIGGER = 7
-GPIO_ECHO = 11
- 
+GPIO_TRIGGER = 16
+GPIO_ECHO = 12
+
 #set GPIO direction (IN / OUT)
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
@@ -65,7 +65,7 @@ def publish_range():
     pub.publish(sensor_range)
  
 if __name__ == '__main__':
-    while True:
+    while not rospy.is_shutdown():
         get_distance()
         publish_range()
         # wait before the next itheration

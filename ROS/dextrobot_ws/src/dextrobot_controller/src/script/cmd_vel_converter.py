@@ -30,4 +30,5 @@ def configure():
 
 
 if __name__ == '__main__':
-    configure()
+    while not rospy.is_shutdown():
+        configure()
