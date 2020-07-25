@@ -21,6 +21,10 @@
 #define MAX_SPEED 1500
 // Max acceleration of the steppers in steps per second ^2
 #define MAX_ACCELERATION 1000
+// Speed levels for the robot mouvements
+#define FAST 600
+#define NORMAL 400
+#define SLOW 200
 
 // Create an instance of the class AccelStepper for each stepper motor connected to the Arduino board
 // via DRV8825 stepper driver
@@ -55,10 +59,111 @@ void loop() {
   // Step the motor with a constant speed as set by setSpeed():
   // stepper.runSpeed();
   
+  
+}
+
+
+// Omnidirectional wheels mouvements
+void goForward(int velocity){
   // Set the speed in steps per second:
-  stepper.setSpeed(400);
-  stepper2.setSpeed(400);
+  motor_1.setSpeed(velocity);
+  motor_2.setSpeed(velocity);
+  motor_3.setSpeed(velocity);
+  motor_4.setSpeed(velocity);
   // Step the motor with a constant speed as set by setSpeed():
-  stepper.runSpeed();
-  stepper2.runSpeed();
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goBackward(int velocity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(-velocity);
+  motor_2.setSpeed(-velocity);
+  motor_3.setSpeed(-velocity);
+  motor_4.setSpeed(-velocity);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goRight(int velocity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(velocity);
+  motor_2.setSpeed(-velocity);
+  motor_3.setSpeed(-velocity);
+  motor_4.setSpeed(velocity);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goLeft(int velocty){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(-velocity);
+  motor_2.setSpeed(velocity);
+  motor_3.setSpeed(velocity);
+  motor_4.setSpeed(-velocity);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goForwardRight(int veloity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(velocity);
+  motor_2.setSpeed(0);
+  motor_3.setSpeed(0);
+  motor_4.setSpeed(velocity);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goForwardLet(int velocity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(0);
+  motor_2.setSpeed(velocity);
+  motor_3.setSpeed(velocity);
+  motor_4.setSpeed(0);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goBackwardRight(int velocity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(0);
+  motor_2.setSpeed(-velocity);
+  motor_3.setSpeed(-velocity);
+  motor_4.setSpeed(0);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
+}
+
+void goBackwardLeft(int velocity){
+  // Set the speed in steps per second:
+  motor_1.setSpeed(-velocity);
+  motor_2.setSpeed(0);
+  motor_3.setSpeed(0);
+  motor_4.setSpeed(-velocity);
+  // Step the motor with a constant speed as set by setSpeed():
+  motor_1.runSpeed();
+  motor_2.runSpeed();
+  motor_3.runSpeed();
+  motor_4.runSpeed();
 }
