@@ -1,4 +1,6 @@
 #include <AccelStepper.h>
+#include <ros.h>
+#include <std_msgs/String.h>
 
 // Define the PIN number of the Arduino board connected with the driver motors
 // MOTOR 1
@@ -29,12 +31,27 @@
 #define NORMAL 400
 #define SLOW 300
 
+// Function that is called once a message is published on the topic on which this Arduino is subscribed
+void trigger(const std_msgs::String& msg){
+  Serial.println("Triggered " + msg.data[0]); 
+  if((msg.data[0] == "A") || (msg.data[0] == "a")){
+    goForward(NORMAL);
+  }
+  else if ((msg.data[0] == "Q") || (msg.data[0] == "q")){
+    stopRobot();
+  }
+}
+
 // Create an instance of the class AccelStepper for each stepper motor connected to the Arduino board
 // via DRV8825 stepper driver
 AccelStepper motor_1 = AccelStepper(motorInterfaceType, stepPin_1, dirPin_1);
 AccelStepper motor_2 = AccelStepper(motorInterfaceType, stepPin_2, dirPin_2);
 AccelStepper motor_3 = AccelStepper(motorInterfaceType, stepPin_3, dirPin_3);
 AccelStepper motor_4 = AccelStepper(motorInterfaceType, stepPin_4, dirPin_4);
+
+// Set this Arduino controller to be a ROS Node that can publish and subscribe to ROS topics
+ros::NodeHandle nh;
+ros::Subscriber<std_msgs::String> sub("/stepper_trigger", trigger );
 
 void setup() {
   // open the serial terminal for debug purposes
@@ -51,30 +68,14 @@ void setup() {
   motor_2.setAcceleration(MAX_ACCELERATION);
   motor_3.setAcceleration(MAX_ACCELERATION);
   motor_4.setAcceleration(MAX_ACCELERATION);
+
+  // cerate and initialize a ROS node on this Arduino controller
+  nh.initNode();
+  nh.subscribe(sub);
 }
 void loop() {
-  // *** MOVE BY STEP POSITION ***
-  // Set target position:
-  // stepper.moveTo(32768);
-  // Run to position with set speed and acceleration:
-  // stepper.runToPosition();
-
-  // *** MOVE BY CRUISE SPEED ***
-  // Set the speed in steps per second:
-  // stepper.setSpeed(400);
-  // Step the motor with a constant speed as set by setSpeed():
-  // stepper.runSpeed();
-
-//  String input = Serial.readString();
-//  Serial.println("Received" + input);
-//  if(input=="A"){
-//    goForward(NORMAL);
-//  } else if (input=="Q"){
-//    stopRobot();
-//  }
-
-  goForward(NORMAL);
-  
+  // Keep ROS Node Up & Running
+  nh.spinOnce();
 }
 
 
