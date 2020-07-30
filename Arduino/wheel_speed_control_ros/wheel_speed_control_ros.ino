@@ -31,14 +31,20 @@
 #define NORMAL 400
 #define SLOW 300
 
+// Track the current action on the stepper
+int action = 0;
+
 // Function that is called once a message is published on the topic on which this Arduino is subscribed
 void trigger(const std_msgs::String& msg){
-  Serial.println("Triggered " + msg.data[0]); 
-  if((msg.data[0] == "A") || (msg.data[0] == "a")){
-    goForward(NORMAL);
+  String ms = msg.data;
+  // for debug
+  if((ms == "A") || (ms == "a")){
+    digitalWrite(13,HIGH);
+    action = 1;
   }
-  else if ((msg.data[0] == "Q") || (msg.data[0] == "q")){
-    stopRobot();
+  else if ((ms == "Q") || (ms == "q")){
+    digitalWrite(13,LOW);
+    action = 0;
   }
 }
 
@@ -55,7 +61,7 @@ ros::Subscriber<std_msgs::String> sub("/stepper_trigger", trigger );
 
 void setup() {
   // open the serial terminal for debug purposes
-  Serial.begin(9600);
+  pinMode(13,OUTPUT);
   
   // Set the maximum speed 
   motor_1.setMaxSpeed(MAX_SPEED);
@@ -74,6 +80,18 @@ void setup() {
   nh.subscribe(sub);
 }
 void loop() {
+  // According to the last received message control the stepper
+  switch(action){
+    case 0:
+      stopRobot();
+      break;
+    case 1:
+      goForward(NORMAL);
+      break;
+    default:
+      stopRobot();
+      break;
+  }
   // Keep ROS Node Up & Running
   nh.spinOnce();
 }
@@ -82,7 +100,7 @@ void loop() {
 // Omnidirectional wheels mouvements
 // SPEED CONTROL
 void goForward(int velocity){
-  // Set the speed in steps per second:
+    // Set the speed in steps per second:
   motor_1.setSpeed(velocity);
   motor_2.setSpeed(velocity);
   motor_3.setSpeed(velocity);
@@ -91,7 +109,7 @@ void goForward(int velocity){
   motor_1.runSpeed();
   motor_2.runSpeed();
   motor_3.runSpeed();
-  motor_4.runSpeed();
+  motor_4.runSpeed();  
 }
 
 void goBackward(int velocity){
