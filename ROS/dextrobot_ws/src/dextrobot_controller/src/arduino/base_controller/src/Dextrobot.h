@@ -68,7 +68,7 @@ public:
     void rotateClockwise(int velocity);
     void rotateCounterClockwise(int velocity);
     void stop();
-    int convertToStepsPerSecond(float ms);
+    float convertToStepsPerSecond(float ms);
 };
 
 
