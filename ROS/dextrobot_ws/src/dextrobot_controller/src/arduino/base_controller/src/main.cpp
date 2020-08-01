@@ -36,7 +36,7 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 
   // Ping back
   // std_msgs/String does not accept string but char array
-  String response = "Received X: " + String(x_lin) + " Y: " + String(y_lin) + "Z: " + String(z_lin);
+  String response = "Received X: " + String(x_lin) + " Y: " + String(y_lin) + " Z: " + String(z_lin);
   char p[response.length()];
   for (int i=0; i<sizeof(p);i++){
     p[i] = response[i];
