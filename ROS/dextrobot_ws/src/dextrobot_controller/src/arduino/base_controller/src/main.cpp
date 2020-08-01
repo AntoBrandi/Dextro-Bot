@@ -21,11 +21,19 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 ros::NodeHandle nh;
 ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", onCmdVelMsg );
 
+// Create an instance of the Robot with its methods
+Dextrobot robot;
 
 void setup() {
-  // put your setup code here, to run once:
+  // cerate and initialize a ROS node on this Arduino controller
+  nh.initNode();
+  nh.subscribe(sub);
+
+  robot = Dextrobot();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
+  // Keep ROS Node Up & Running
+  nh.spinOnce();
 }
