@@ -1,6 +1,8 @@
 /*
-  Arm_Configuration.h - Test library for the computation
-  of the inverse kinematic for antropomorphous robot with 3 DoF contorlled with Arduino
+  Dextrobot.h - DextroBot
+  Class that cointains the implementation of the low level omnidirectional mouvements
+  for the robot based on the willing direction of the mouvement the stepper motors are controlled
+  differently and independently in order to achieve the desired mouvement.
   Copyright (c) 2020 Antonio Brandi.  All right reserved.
 */
 #include <AccelStepper.h>

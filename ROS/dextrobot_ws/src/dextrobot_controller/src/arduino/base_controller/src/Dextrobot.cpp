@@ -1,3 +1,11 @@
+/*
+  Dextrobot.cpp - DextroBot
+  Class that cointains the implementation of the low level omnidirectional mouvements
+  for the robot based on the willing direction of the mouvement the stepper motors are controlled
+  differently and independently in order to achieve the desired mouvement.
+  Copyright (c) 2020 Antonio Brandi.  All right reserved.
+*/
+
 #include "Dextrobot.h"
 
 Dextrobot::Dextrobot(/* args */)
@@ -7,6 +15,18 @@ Dextrobot::Dextrobot(/* args */)
     motor_2 = AccelStepper(motorInterfaceType, stepPin_2, dirPin_2);
     motor_3 = AccelStepper(motorInterfaceType, stepPin_3, dirPin_3);
     motor_4 = AccelStepper(motorInterfaceType, stepPin_4, dirPin_4);
+
+    // Limit the maximum speed 
+    motor_1.setMaxSpeed(MAX_SPEED);
+    motor_2.setMaxSpeed(MAX_SPEED);
+    motor_3.setMaxSpeed(MAX_SPEED);
+    motor_4.setMaxSpeed(MAX_SPEED);
+
+    // Limit the maximum acceleration
+    motor_1.setAcceleration(MAX_ACCELERATION);
+    motor_2.setAcceleration(MAX_ACCELERATION);
+    motor_3.setAcceleration(MAX_ACCELERATION);
+    motor_4.setAcceleration(MAX_ACCELERATION);
 }
 
 Dextrobot::~Dextrobot()
