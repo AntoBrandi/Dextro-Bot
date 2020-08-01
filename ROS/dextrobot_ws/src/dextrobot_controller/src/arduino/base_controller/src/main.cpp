@@ -22,21 +22,26 @@ ros::NodeHandle nh;
 std_msgs::String message;
 ros::Publisher pub("chatter", &message);
 
+// Create an instance of the Robot with its methods
+Dextrobot robot;
+
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Twist& msg){
   geometry_msgs::Vector3 linear = msg.linear;
   geometry_msgs::Vector3 angular = msg.angular;
+  // extract only useful parameters. No linear mouvement possible over z axis
+  // and no rotation mouvements possible over x and y axis
   float x_lin = linear.x;
   float y_lin = linear.y;
-  float z_lin = linear.z;
-  float x_ang = angular.x;
-  float y_ang = angular.y;
   float z_ang = angular.z;
+  int x_lin_steps = robot.convertToStepsPerSecond(x_lin);
+  int y_lin_steps = robot.convertToStepsPerSecond(y_lin);
+  int z_ang_steps = robot.convertToStepsPerSecond(z_ang);
 
   // Ping back
   // std_msgs/String does not accept string but char array
-  String response = "Received X: " + String(x_lin) + " Y: " + String(y_lin) + " Z: " + String(z_lin);
+  String response = "Applying X: " + String(x_lin_steps) + " Y: " + String(y_lin_steps) + " Rotation Z: " + String(z_ang_steps);
   char p[response.length()];
   for (int i=0; i<sizeof(p);i++){
     p[i] = response[i];
@@ -49,10 +54,6 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 // Subscriber Node
 ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", onCmdVelMsg );
 
-
-
-// Create an instance of the Robot with its methods
-Dextrobot robot;
 
 void setup() {
   // cerate and initialize a ROS node on this Arduino controller

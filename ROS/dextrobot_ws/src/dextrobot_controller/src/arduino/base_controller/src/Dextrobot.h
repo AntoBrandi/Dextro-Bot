@@ -7,6 +7,11 @@
 */
 #include <AccelStepper.h>
 
+// Mechanical and Electrical parameters
+#define STEP_ANGLE 1.8
+#define STEP_PER_REVOLUTION 360/STEP_ANGLE
+#define WHEEL_RADIUS 0.04 // meters
+
 // Define the PIN number of the Arduino board connected with the driver motors
 // MOTOR 1
 #define dirPin_1 2
@@ -63,6 +68,7 @@ public:
     void rotateClockwise(int velocity);
     void rotateCounterClockwise(int velocity);
     void stop();
+    int convertToStepsPerSecond(float ms);
 };
 
 

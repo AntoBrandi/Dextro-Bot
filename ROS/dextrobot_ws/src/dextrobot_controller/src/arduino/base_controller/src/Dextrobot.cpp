@@ -175,3 +175,13 @@ void Dextrobot::stop(){
   motor_3.runSpeed();
   motor_4.runSpeed();
 }
+
+// Converts the velocities provided via geometry_msgs/Twist from m/s 
+// to steps/s that will be provided to the stepper motors
+int Dextrobot::convertToStepsPerSecond(float ms){
+  // float time = (2*3.1416*WHEEL_RADIUS)/ms; // seconds for one rotation
+  // float rpm = 60/time; // rotation per min
+  // int stepsPerSecond = (int)(rpm/60)*STEP_PER_REVOLUTION; 
+  // compact form
+  return (int)(ms/(2*3.1416*WHEEL_RADIUS))*STEP_PER_REVOLUTION;
+}
