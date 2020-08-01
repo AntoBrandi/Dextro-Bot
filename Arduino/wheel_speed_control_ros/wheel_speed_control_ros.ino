@@ -39,11 +39,9 @@ void trigger(const std_msgs::String& msg){
   String ms = msg.data;
   // for debug
   if((ms == "A") || (ms == "a")){
-    digitalWrite(13,HIGH);
     action = 1;
   }
   else if ((ms == "Q") || (ms == "q")){
-    digitalWrite(13,LOW);
     action = 0;
   }
 }
@@ -60,8 +58,6 @@ ros::NodeHandle nh;
 ros::Subscriber<std_msgs::String> sub("/stepper_trigger", trigger );
 
 void setup() {
-  // open the serial terminal for debug purposes
-  pinMode(13,OUTPUT);
   
   // Set the maximum speed 
   motor_1.setMaxSpeed(MAX_SPEED);
@@ -92,6 +88,7 @@ void loop() {
       stopRobot();
       break;
   }
+  
   // Keep ROS Node Up & Running
   nh.spinOnce();
 }
@@ -100,7 +97,7 @@ void loop() {
 // Omnidirectional wheels mouvements
 // SPEED CONTROL
 void goForward(int velocity){
-    // Set the speed in steps per second:
+  // Set the speed in steps per second:
   motor_1.setSpeed(velocity);
   motor_2.setSpeed(velocity);
   motor_3.setSpeed(velocity);
