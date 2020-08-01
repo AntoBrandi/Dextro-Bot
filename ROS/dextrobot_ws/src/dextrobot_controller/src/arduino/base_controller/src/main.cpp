@@ -1,5 +1,11 @@
+/*
+  Arm_Configuration.h - Test library for the computation
+  of the inverse kinematic for antropomorphous robot with 3 DoF contorlled with Arduino
+  Copyright (c) 2020 Antonio Brandi.  All right reserved.
+*/
+
 #include <Arduino.h>
-#include <AccelStepper.h>
+#include <Dextrobot.h>
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 
