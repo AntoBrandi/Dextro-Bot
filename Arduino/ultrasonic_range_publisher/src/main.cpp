@@ -86,13 +86,13 @@ uint8_t oldSensorReading[SONAR_NUM];    //Store last valid value of the sensors.
 // Raw data coming from sensors
 uint8_t front_sonar;
 uint8_t left_sonar;             
-uint8_t center_sonar;
+uint8_t right_sonar;
 uint8_t back_sonar;
 
 // Filtered data coming from sensor and passed through a Kalmn Filter
 uint8_t front_sonar_filtered;
 uint8_t left_sonar_filtered;             
-uint8_t center_sonar_filtered;
+uint8_t right_sonar_filtered;
 uint8_t back_sonar_filtered;
 
 
@@ -118,6 +118,29 @@ void resetTimer() {
   _timerStart = millis();
 }
 
+// If ping received, set the sensor distance to array.
+void echoCheck() {
+  if (sonars[currentSensor].check_timer())
+    cm[currentSensor] = sonars[currentSensor].ping_result / US_ROUNDTRIP_CM;
+}
+
+// If sensor value is 0, then return the last stored value different than 0.
+int returnLastValidRead(uint8_t sensorArray, uint8_t cm) {
+  if (cm != 0) {
+    return oldSensorReading[sensorArray] = cm;
+  } else {
+    return oldSensorReading[sensorArray];
+  }
+}
+ 
+// Return the last valid value from the sensor.
+void oneSensorCycle() {
+  front_sonar   = returnLastValidRead(0, cm[0]);
+  left_sonar   = returnLastValidRead(1, cm[1]);
+  right_sonar = returnLastValidRead(2, cm[2]);
+  back_sonar  = returnLastValidRead(3, cm[3]);
+}
+
 // looping the sensors
 void sensorCycle() {
   for (uint8_t i = 0; i < SONAR_NUM; i++) {
@@ -129,29 +152,6 @@ void sensorCycle() {
       cm[currentSensor] = 0;
       sonars[currentSensor].ping_timer(echoCheck);
     }
-  }
-}
- 
-// If ping received, set the sensor distance to array.
-void echoCheck() {
-  if (sonars[currentSensor].check_timer())
-    cm[currentSensor] = sonars[currentSensor].ping_result / US_ROUNDTRIP_CM;
-}
- 
-// Return the last valid value from the sensor.
-void oneSensorCycle() {
-  front_sonar   = returnLastValidRead(0, cm[0]);
-  left_sonar   = returnLastValidRead(1, cm[1]);
-  right_sonar = returnLastValidRead(2, cm[2]);
-  back_sonar  = returnLastValidRead(3, cm[3]);
-}
- 
-// If sensor value is 0, then return the last stored value different than 0.
-int returnLastValidRead(uint8_t sensorArray, uint8_t cm) {
-  if (cm != 0) {
-    return oldSensorReading[sensorArray] = cm;
-  } else {
-    return oldSensorReading[sensorArray];
   }
 }
  
@@ -171,7 +171,7 @@ void setup() {
     nextPingTimer[i] = nextPingTimer[i - 1] + PING_INTERVAL;
   
   // init the publisher node
-  nh.initNode()
+  nh.initNode();
 
   // register a publisher for each topic for each sensors
   nh.advertise(pub_sonar_front);
