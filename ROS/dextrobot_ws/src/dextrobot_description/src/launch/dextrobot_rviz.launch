@@ -2,7 +2,7 @@
 <launch>
   
   <arg name="prefix" default="dextrobot_"/>
-  <arg name="rviz_config" default="$(find dextrobot_gazebo)/src/rviz/dextrobot.rviz"/>
+  <arg name="rviz_config" default="$(find dextrobot_description)/src/rviz/dextrobot.rviz"/>
   <arg name="robot_model"  default="dextrobot.urdf.xacro"  doc="Different robot versions: ('')"/>
   
   <!-- Load the URDF into ROS parameter server -->
