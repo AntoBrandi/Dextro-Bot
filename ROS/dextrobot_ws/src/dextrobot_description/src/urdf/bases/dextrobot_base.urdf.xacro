@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<robot name="summit_xl" xmlns:xacro="http://wiki.ros.org/xacro">
+
+
+  <xacro:include filename="$(find dextrobot_description)/src/urdf/bases/dextrobot_base.gazebo.xacro" />
+
+  <xacro:macro name="dextrobot_base" params="prefix publish_bf hq">
+
+  <!-- Robot mechanical and motor parameters -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="wheel_radius" value="0.04" />
+
+	<!-- BASE FOOTPRINT -->
+	  <xacro:if value="${publish_bf}">
+		<link name="${prefix}base_footprint">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+		</link>
+
+		<joint name="${prefix}base_footprint_joint" type="fixed">
+		  <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" /> <!-- ${wheel_radius} property must be defined inside wheel description -->
+		  <parent link="${prefix}base_footprint"/>
+		  <child link="${prefix}base_link" />
+		</joint>
+	  </xacro:if>
+
+  <!-- BASE_LINK -->
+  <link name="${prefix}base_link">
+    <inertial>
+      <mass value="125.0" />
+      <origin xyz="0 0 0" />
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <xacro:if value="${hq}">
+      <geometry>
+      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.stl"/>
+      </geometry>
+      </xacro:if>
+      <xacro:unless value="${hq}">
+      <geometry>
+      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae"/>
+      </geometry>
+      </xacro:unless>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1"/>
+      </material>
+    </visual>
+    <collision>
+       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <geometry>
+         <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae"/>
+       </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="${prefix}base_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  </xacro:macro>
+</robot>
