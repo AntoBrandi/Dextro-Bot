@@ -17,7 +17,7 @@ def callback(data):
     sensor_imu.header.frame_id = "imu"
     sensor_imu.header.stamp = rospy.Time.now()
 
-    q = quaternion_from_euler(readings[3], readings[4], readings[5])
+    q = quaternion_from_euler(float(readings[3]), float(readings[4]), float(readings[5]))
 
     sensor_imu.orientation.x = q[0]
     sensor_imu.orientation.y = q[1]
