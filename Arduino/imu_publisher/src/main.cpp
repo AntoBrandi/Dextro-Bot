@@ -1,92 +1,63 @@
-#include <Arduino.h>
-#include <Wire.h>
 #include <ros.h>
-#include <sensor_msgs/Imu.h>
-#include <geometry_msgs/Quaternion.h>
-#include <geometry_msgs/Vector3.h>
-#include <tf/transform_broadcaster.h>
+#include <std_msgs/String.h>
+#include <Wire.h>
 
-// Topic name
-#define TOPIC_IMU "/imu"
+#define TOPIC_NAME "imu_raw"
+#define PUBLISH_DELAY 100
 
-// Init IMU parameters
-const int MPU = 0x68; 
-// not filtered sensor readings
+const int MPU_addr=0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+long publisher_timer;
 
-// Init the ROS node
+
+//Set up the ros node and publisher
+std_msgs::String imu_msg;
+ros::Publisher imu(TOPIC_NAME, &imu_msg);
 ros::NodeHandle nh;
 
-// Message that will be created and published on ros
-sensor_msgs::Imu imu;
- 
-// Topics on which the sonar messages will be published
-ros::Publisher pub_imu(TOPIC_IMU, &imu);
-
-// Functions
-void composeMessage(){
-  imu.header.frame_id = TOPIC_IMU;
-  imu.header.stamp = nh.now();
-  geometry_msgs::Quaternion quat = geometry_msgs::Quaternion();
-  // Create quaternion from euler calculation
-  float cy = cos(GyZ * 0.5);
-  float sy = sin(GyZ * 0.5);
-  float cp = cos(GyY * 0.5);
-  float sp = sin(GyY * 0.5);
-  float cr = cos(GyX * 0.5);
-  float sr = sin(GyX * 0.5);
-  quat.x = sr * cp * cy - cr * sp * sy;
-  quat.y = cr * sp * cy + sr * cp * sy;
-  quat.z = cr * cp * sy - sr * sp * cy;
-  quat.w = cr * cp * cy + sr * sp * sy;
-  imu.orientation = quat;
-  geometry_msgs::Vector3 lin_acc = geometry_msgs::Vector3();
-  lin_acc.x = AcX;
-  lin_acc.y = AcY;
-  lin_acc.z = AcZ;
-  imu.linear_acceleration = lin_acc;
-}
-
-
-void setup() {
-  // setup the communication with the IMU
-  Wire.begin();
-  Wire.beginTransmission(MPU);
-  Wire.write(0x6B); 
-  Wire.write(0);    
-  Wire.endTransmission(true);
-
-  // init the publisher node
+                
+void setup()
+{
+  // Init and Configure the ROS node
   nh.initNode();
-
-  // register a publisher for each topic for each sensors
-  nh.advertise(pub_imu);
+  nh.advertise(imu);
+  
+  // Init and configure the communication with the IMU via I2C
+  Wire.begin();
+  Wire.beginTransmission(MPU_addr);
+  Wire.write(0x6B);  // PWR_MGMT_1 register
+  Wire.write(0);     // set to zero (wakes up the MPU-6050)
+  Wire.endTransmission(true);
+  Serial.begin(57600);
 }
 
-void loop() {
-  // Read values from the IMU
-  Wire.beginTransmission(MPU);
-  Wire.write(0x3B);  
+void loop()
+{
+  Wire.beginTransmission(MPU_addr);
+  Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU,12,true);  
-  AcX = Wire.read()<<8|Wire.read();    
-  AcY = Wire.read()<<8|Wire.read();  
-  AcZ = Wire.read()<<8|Wire.read();  
-  GyX = Wire.read()<<8|Wire.read();  
-  GyY = Wire.read()<<8|Wire.read();  
-  GyZ = Wire.read()<<8|Wire.read(); 
+  Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers  String AX = String(mpu6050.getAccX());
+  
+  AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)    
+  AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
+  AcZ=Wire.read()<<8|Wire.read();  // 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
+  Tmp=Wire.read()<<8|Wire.read();  // 0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L)
+  GyX=Wire.read()<<8|Wire.read();  // 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
+  GyY=Wire.read()<<8|Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
+  GyZ=Wire.read()<<8|Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
 
+  String data = String(AcX) + ","+ String(AcY) + "," + String(AcZ) + "," + String(GyX) + "," + String(GyY) + "," + String(GyZ);
 
-  // compose the ROS message of type sensor_msgs/Imu
-  composeMessage();
-
-  // publish the message
-  pub_imu.publish(&imu);
-
-
-  // keep the ROS node up and running
-  nh.spinOnce();
-
-  // not that fast
-  delay(100);
+  int length = data.length();
+  char data_final[length+1];
+  data.toCharArray(data_final, length+1);
+  
+  if (millis() > publisher_timer) {
+    // step 1: request reading from sensor
+    imu_msg.data = data_final;
+    imu.publish(&imu_msg);
+    publisher_timer = millis() + PUBLISH_DELAY; //publish ten times a second
+    nh.spinOnce();
+  }
+  
 }

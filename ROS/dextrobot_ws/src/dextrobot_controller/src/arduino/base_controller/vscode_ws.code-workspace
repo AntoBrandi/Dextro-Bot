@@ -6,6 +6,10 @@
 		{
 			"name": "base_controller",
 			"path": "."
+		},
+		{
+			"name": "imu_publisher",
+			"path": "..\\..\\..\\..\\..\\..\\..\\Arduino\\imu_publisher"
 		}
 	],
 	"settings": {}
