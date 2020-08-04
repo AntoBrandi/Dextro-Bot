@@ -1,13 +1,20 @@
 #include <ros.h>
 #include <std_msgs/String.h>
 #include <Wire.h>
+#include <MPU6050.h>
 
 #define TOPIC_NAME "imu_raw"
 #define PUBLISH_DELAY 100
 
 const int MPU_addr=0x68;  // I2C address of the MPU-6050
+MPU6050 mpu;
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 long publisher_timer;
+
+// angle calculation to rpy
+int pitch = 0;
+int roll = 0;
+float yaw = 0;
 
 
 //Set up the ros node and publisher
@@ -23,30 +30,46 @@ void setup()
   nh.advertise(imu);
   
   // Init and configure the communication with the IMU via I2C
-  Wire.begin();
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x6B);  // PWR_MGMT_1 register
-  Wire.write(0);     // set to zero (wakes up the MPU-6050)
-  Wire.endTransmission(true);
   Serial.begin(57600);
+
+  while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
+  {
+    Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
+    delay(500);
+  }
+
+  // Calibrate gyroscope. The calibration must be at rest.
+  // If you don't want calibrate, comment this line.
+  mpu.calibrateGyro();
+  
+  // Set threshold sensivty. Default 3.
+  // If you don't want use threshold, comment this line or set 0.
+  mpu.setThreshold(1);
 }
 
 void loop()
 {
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU_addr,14,true);  // request a total of 14 registers  String AX = String(mpu6050.getAccX());
-  
-  AcX=Wire.read()<<8|Wire.read();  // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)    
-  AcY=Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
-  AcZ=Wire.read()<<8|Wire.read();  // 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
-  Tmp=Wire.read()<<8|Wire.read();  // 0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L)
-  GyX=Wire.read()<<8|Wire.read();  // 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
-  GyY=Wire.read()<<8|Wire.read();  // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
-  GyZ=Wire.read()<<8|Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
+  // Read normalized values 
+  Vector normAccel = mpu.readNormalizeAccel();
+  Vector normGyro = mpu.readNormalizeGyro();
 
-  String data = String(AcX) + ","+ String(AcY) + "," + String(AcZ) + "," + String(GyX) + "," + String(GyY) + "," + String(GyZ);
+  // Calculate Pitch & Roll
+  pitch = -(atan2(normAccel.XAxis, sqrt(normAccel.YAxis*normAccel.YAxis + normAccel.ZAxis*normAccel.ZAxis))*180.0)/M_PI;
+  roll = (atan2(normAccel.YAxis, normAccel.ZAxis)*180.0)/M_PI;
+  
+  //Ignore the gyro if our angular velocity does not meet our threshold
+  if (normGyro.ZAxis > 1 || normGyro.ZAxis < -1) {
+    normGyro.ZAxis /= 100;
+    yaw += normGyro.ZAxis;
+  }
+
+   //Keep our angle between 0-359 degrees
+  if (yaw < 0)
+    yaw += 360;
+  else if (yaw > 359)
+    yaw -= 360;
+
+  String data = String(normAccel.XAxis) + "," + String(normAccel.YAxis) + "," + String(normAccel.ZAxis) + "," + String(roll) + ","+ String(pitch) + "," + String(yaw);
 
   int length = data.length();
   char data_final[length+1];
