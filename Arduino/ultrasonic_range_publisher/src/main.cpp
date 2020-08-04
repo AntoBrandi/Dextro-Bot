@@ -1,4 +1,4 @@
-#include <Aduino.h>
+#include <Arduino.h>
 #include <NewPing.h>
 #include <SimpleKalmanFilter.h>
 #include <ros.h>
@@ -9,6 +9,7 @@
 // via Arduino formatted as sensor_msgs/Range message
 
 #define SONAR_NUM 4 // number of ultrasonic sensors
+#define PI 3.1416
 #define MIN_DISTANCE 0
 #define MAX_DISTANCE 200 // Max distance for obstacle detection
 #define FIELD_OF_VIEW 0.26
@@ -73,15 +74,6 @@ ros::Publisher pub_sonar_front(TOPIC_SONAR_FRONT, &sonar_front);
 ros::Publisher pub_sonar_left(TOPIC_SONAR_LEFT, &sonar_left);
 ros::Publisher pub_sonar_right(TOPIC_SONAR_RIGHT, &sonar_right);
 ros::Publisher pub_sonar_back(TOPIC_SONAR_BACK, &sonar_back);
-
-
-// Variables
-unsigned long nextPingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
-unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
-uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
-unsigned long _timerStart = 0;
-int LOOPING = 40; // Loop for every 40 milliseconds.
-uint8_t oldSensorReading[SONAR_NUM];    //Store last valid value of the sensors.
  
 // Raw data coming from sensors
 uint8_t front_sonar;
@@ -95,64 +87,17 @@ uint8_t left_sonar_filtered;
 uint8_t right_sonar_filtered;
 uint8_t back_sonar_filtered;
 
+char frameid[] ="/sonar_ranger";
+
 
 // Functions
-void initRangeMessage(sensor_msgs::Range &range_name, char *frame_id_name)
+void initRangeMessage(sensor_msgs::Range &range_name)
 {
   range_name.radiation_type = sensor_msgs::Range::ULTRASOUND;
-  range_name.header.frame_id = frame_id_name;
+  range_name.header.frame_id = frameid;
   range_name.field_of_view = FIELD_OF_VIEW;
   range_name.min_range = MIN_DISTANCE;
   range_name.max_range = MAX_DISTANCE/100;
-}
-
-// compare the current time in millis with the respect of the time
-// when the loop started
-bool isTimeForLoop(int _mSec) {
-  return (millis() - _timerStart) > _mSec;
-}
-
-// reset the information stored in the time variable so that the loop can start
-// again after a specified amount of time
-void resetTimer() {
-  _timerStart = millis();
-}
-
-// If ping received, set the sensor distance to array.
-void echoCheck() {
-  if (sonars[currentSensor].check_timer())
-    cm[currentSensor] = sonars[currentSensor].ping_result / US_ROUNDTRIP_CM;
-}
-
-// If sensor value is 0, then return the last stored value different than 0.
-int returnLastValidRead(uint8_t sensorArray, uint8_t cm) {
-  if (cm != 0) {
-    return oldSensorReading[sensorArray] = cm;
-  } else {
-    return oldSensorReading[sensorArray];
-  }
-}
- 
-// Return the last valid value from the sensor.
-void oneSensorCycle() {
-  front_sonar   = returnLastValidRead(0, cm[0]);
-  left_sonar   = returnLastValidRead(1, cm[1]);
-  right_sonar = returnLastValidRead(2, cm[2]);
-  back_sonar  = returnLastValidRead(3, cm[3]);
-}
-
-// looping the sensors
-void sensorCycle() {
-  for (uint8_t i = 0; i < SONAR_NUM; i++) {
-    if (millis() >= nextPingTimer[i]) {
-      nextPingTimer[i] += PING_INTERVAL * SONAR_NUM;
-      if (i == 0 && currentSensor == SONAR_NUM - 1) oneSensorCycle();
-      sonars[currentSensor].timer_stop();
-      currentSensor = i;
-      cm[currentSensor] = 0;
-      sonars[currentSensor].ping_timer(echoCheck);
-    }
-  }
 }
  
 // Apply Kalman Filter to sensor reading.
@@ -165,11 +110,6 @@ void applyKF() {
 
 
 void setup() {
-  // init the ping timer for each sonar that indicates the next ping time
-  nextPingTimer[0] = millis() + 75;
-  for (uint8_t i = 1; i < SONAR_NUM; i++)
-    nextPingTimer[i] = nextPingTimer[i - 1] + PING_INTERVAL;
-  
   // init the publisher node
   nh.initNode();
 
@@ -180,38 +120,43 @@ void setup() {
   nh.advertise(pub_sonar_back);
 
   // init the sensor_msgs/Range message with common information between sensors
-  initRangeMessage(sonar_front, TOPIC_SONAR_FRONT);
-  initRangeMessage(sonar_left, TOPIC_SONAR_LEFT);
-  initRangeMessage(sonar_right, TOPIC_SONAR_RIGHT);
-  initRangeMessage(sonar_back, TOPIC_SONAR_BACK);
+  initRangeMessage(sonar_front);
+  initRangeMessage(sonar_left);
+  initRangeMessage(sonar_right);
+  initRangeMessage(sonar_back);
 }
 
 void loop() {
-  if(isTimeForLoop(LOOPING)){
-    sensorCycle();
-    oneSensorCycle();
-    applyKF();
+  // Read From sensors
+  // Front sonar
+  front_sonar = sonars[0].ping_cm(); 
+  front_sonar_filtered = KFilter.updateEstimate(front_sonar);
+  // Left sonar
+  left_sonar = sonars[1].ping_cm(); 
+  left_sonar_filtered = KFilter.updateEstimate(front_sonar);
+  // Right sonar
+  right_sonar = sonars[2].ping_cm(); 
+  right_sonar_filtered = KFilter.updateEstimate(front_sonar);
+  // Back sonar
+  back_sonar = sonars[3].ping_cm(); 
+  back_sonar_filtered = KFilter.updateEstimate(front_sonar);
 
-    // compose the sensor_msgs/Range message
-    sonar_front.range = front_sonar_filtered;
-    sonar_left.range = left_sonar_filtered;
-    sonar_right.range = right_sonar_filtered;
-    sonar_back.range = back_sonar_filtered;
+  // compose the sensor_msgs/Range message
+  sonar_front.range = (float)front_sonar_filtered/100;
+  sonar_left.range = (float)left_sonar_filtered/100;
+  sonar_right.range = (float)right_sonar_filtered/100;
+  sonar_back.range = (float)back_sonar_filtered/100;
 
-    sonar_front.header.stamp = nh.now();
-    sonar_left.header.stamp = nh.now();
-    sonar_right.header.stamp = nh.now();
-    sonar_back.header.stamp = nh.now();
+  sonar_front.header.stamp = nh.now();
+  sonar_left.header.stamp = nh.now();
+  sonar_right.header.stamp = nh.now();
+  sonar_back.header.stamp = nh.now();
 
-    // publish each sonar reading on each topic
-    pub_sonar_front.publish(&sonar_front);
-    pub_sonar_left.publish(&sonar_left);
-    pub_sonar_right.publish(&sonar_right);
-    pub_sonar_back.publish(&sonar_back);
-
-
-    resetTimer();
-  }
+  // publish each sonar reading on each topic
+  pub_sonar_front.publish(&sonar_front);
+  pub_sonar_left.publish(&sonar_left);
+  pub_sonar_right.publish(&sonar_right);
+  pub_sonar_back.publish(&sonar_back);
 
 
   // keep the ROS node up and running
