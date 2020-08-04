@@ -5,6 +5,7 @@
 
 #define TOPIC_NAME "imu_raw"
 #define PUBLISH_DELAY 100
+#define PI 3.1416
 
 const int MPU_addr=0x68;  // I2C address of the MPU-6050
 MPU6050 mpu;
@@ -21,6 +22,11 @@ float yaw = 0;
 std_msgs::String imu_msg;
 ros::Publisher imu(TOPIC_NAME, &imu_msg);
 ros::NodeHandle nh;
+
+// convert RPY degrees angles to Radians
+float toRadians(float degree){
+  return degree*PI/180;
+}
 
                 
 void setup()
@@ -69,7 +75,7 @@ void loop()
   else if (yaw > 359)
     yaw -= 360;
 
-  String data = String(normAccel.XAxis) + "," + String(normAccel.YAxis) + "," + String(normAccel.ZAxis) + "," + String(roll) + ","+ String(pitch) + "," + String(yaw);
+  String data = String(normAccel.XAxis) + "," + String(normAccel.YAxis) + "," + String(normAccel.ZAxis) + "," + String(toRadians(roll)) + ","+ String(toRadians(pitch)) + "," + String(toRadians(yaw));
 
   int length = data.length();
   char data_final[length+1];
