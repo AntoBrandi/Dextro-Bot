@@ -8,7 +8,7 @@
 
   <!-- Robot mechanical and motor parameters -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="wheel_radius" value="0.4" />
+  <xacro:property name="wheel_radius" value="0.04" />
 
 	<!-- BASE FOOTPRINT -->
 	  <xacro:if value="${publish_bf}">
@@ -31,15 +31,15 @@
   <!-- BASE_LINK -->
   <link name="${prefix}base_link">
     <visual>
-      <origin xyz="2 1.05 -0.3" rpy="${PI/2} 0 ${-PI/2}" />
+      <origin xyz="0.2 0.105 -0.03" rpy="${PI/2} 0 ${-PI/2}" />
       <xacro:if value="${hq}">
       <geometry>
-      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.STL" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.STL" scale="0.001 0.001 0.001"/>
       </geometry>
       </xacro:if>
       <xacro:unless value="${hq}">
       <geometry>
-      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae" scale="0.001 0.001 0.001"/>
       </geometry>
       </xacro:unless>
       <material name="black">
@@ -47,9 +47,9 @@
       </material>
     </visual>
     <collision>
-       <origin xyz="2 1.05 -0.3" rpy="${PI/2} 0 ${-PI/2}" />
+       <origin xyz="0.2 0.105 -0.03" rpy="${PI/2} 0 ${-PI/2}" />
        <geometry>
-         <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae" scale="0.01 0.01 0.01"/>
+         <mesh filename="package://dextrobot_description/src/mesh/base/dextrobot_chassis.dae" scale="0.001 0.001 0.001"/>
        </geometry>
     </collision>
   </link>
