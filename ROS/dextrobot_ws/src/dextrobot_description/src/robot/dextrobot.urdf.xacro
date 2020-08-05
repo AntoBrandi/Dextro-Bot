@@ -22,20 +22,20 @@
 	<!-- Wheel parameters -->
 	<!-- Front Left -->
 	<xacro:property name="wheel_1_offset_x" value="-1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_1_offset_y" value="-0.8" />
-	<xacro:property name="wheel_1_offset_z" value="0.0" />
+	<xacro:property name="wheel_1_offset_y" value="0.65" />
+	<xacro:property name="wheel_1_offset_z" value="0" />
 	<!-- Front Right -->
 	<xacro:property name="wheel_2_offset_x" value="0.72" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_2_offset_y" value="0.05" />
-	<xacro:property name="wheel_2_offset_z" value="0.0" />
+	<xacro:property name="wheel_2_offset_y" value="0.65" />
+	<xacro:property name="wheel_2_offset_z" value="0" />
 	<!-- Back Left -->
 	<xacro:property name="wheel_3_offset_x" value="-1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_3_offset_y" value="-2.2" />
-	<xacro:property name="wheel_3_offset_z" value="0.0" />
+	<xacro:property name="wheel_3_offset_y" value="-0.73" />
+	<xacro:property name="wheel_3_offset_z" value="0" />
 	<!-- Back Right -->
 	<xacro:property name="wheel_4_offset_x" value="0.72" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_4_offset_y" value="-1.35" />
-	<xacro:property name="wheel_4_offset_z" value="0.0" />
+	<xacro:property name="wheel_4_offset_y" value="-0.73" />
+	<xacro:property name="wheel_4_offset_z" value="0" />
 
 	<!-- IMU parameters -->
 	<xacro:property name="imu_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
@@ -44,8 +44,8 @@
 
 	<!-- Camera parameters -->
 	<xacro:property name="camera_offset_x" value="-0.15" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="camera_offset_y" value="-0.25" />
-	<xacro:property name="camera_offset_z" value="1.1" />
+	<xacro:property name="camera_offset_y" value="0.8" />
+	<xacro:property name="camera_offset_z" value="0.7" />
 
 	<!-- Sonar parameters -->
 	<!-- front sonar -->

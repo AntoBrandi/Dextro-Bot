@@ -20,7 +20,7 @@
       <parent link="${parent}"/>
       <child link="${prefix}_wheel_link"/>
       <xacro:insert_block name="origin" />
-      <axis xyz="0 1 0" rpy="0 0 0" />
+      <axis xyz="1 0 0"/>
       <limit effort="100" velocity="100"/>
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
@@ -28,7 +28,7 @@
     <link name="${prefix}_wheel_link">
       <visual>
         <xacro:if value="${hq}">
-          <origin xyz="0 0 0" rpy="0 0 0" />
+          <origin xyz="0 -0.425 -0.42" rpy="0 0 0" />
           <xacro:if value="${reflect}">
             <geometry>
               <mesh filename="package://dextrobot_description/src/mesh/wheels/mechanum_wheel_1.dae" scale="0.1 0.1 0.1"/>
