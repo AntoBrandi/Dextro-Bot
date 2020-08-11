@@ -21,48 +21,48 @@
 
 	<!-- Wheel parameters -->
 	<!-- Front Left -->
-	<xacro:property name="wheel_1_offset_x" value="-1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_1_offset_y" value="-0.8" />
-	<xacro:property name="wheel_1_offset_z" value="0.0" />
+	<xacro:property name="wheel_1_offset_x" value="-0.1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_1_offset_y" value="0.065" />
+	<xacro:property name="wheel_1_offset_z" value="0" />
 	<!-- Front Right -->
-	<xacro:property name="wheel_2_offset_x" value="0.72" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_2_offset_y" value="0.05" />
-	<xacro:property name="wheel_2_offset_z" value="0.0" />
+	<xacro:property name="wheel_2_offset_x" value="0.072" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_2_offset_y" value="0.065" />
+	<xacro:property name="wheel_2_offset_z" value="0" />
 	<!-- Back Left -->
-	<xacro:property name="wheel_3_offset_x" value="-1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_3_offset_y" value="-2.2" />
-	<xacro:property name="wheel_3_offset_z" value="0.0" />
+	<xacro:property name="wheel_3_offset_x" value="-0.1" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_3_offset_y" value="-0.073" />
+	<xacro:property name="wheel_3_offset_z" value="0" />
 	<!-- Back Right -->
-	<xacro:property name="wheel_4_offset_x" value="0.72" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_4_offset_y" value="-1.35" />
-	<xacro:property name="wheel_4_offset_z" value="0.0" />
+	<xacro:property name="wheel_4_offset_x" value="0.072" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="wheel_4_offset_y" value="-0.073" />
+	<xacro:property name="wheel_4_offset_z" value="0" />
 
 	<!-- IMU parameters -->
-	<xacro:property name="imu_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="imu_offset_y" value="0.235" />
+	<xacro:property name="imu_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="imu_offset_y" value="0.0235" />
 	<xacro:property name="imu_offset_z" value="0.0" />
 
 	<!-- Camera parameters -->
-	<xacro:property name="camera_offset_x" value="-0.15" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="camera_offset_y" value="-0.25" />
-	<xacro:property name="camera_offset_z" value="1.1" />
+	<xacro:property name="camera_offset_x" value="-0.015" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="camera_offset_y" value="0.08" />
+	<xacro:property name="camera_offset_z" value="0.07" />
 
 	<!-- Sonar parameters -->
 	<!-- front sonar -->
-	<xacro:property name="front_sonar_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="front_sonar_offset_y" value="0.235" />
+	<xacro:property name="front_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="front_sonar_offset_y" value="0.0235" />
 	<xacro:property name="front_sonar_offset_z" value="0.0" />
 	<!-- left sonar -->
-	<xacro:property name="left_sonar_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="left_sonar_offset_y" value="0.235" />
+	<xacro:property name="left_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="left_sonar_offset_y" value="0.0235" />
 	<xacro:property name="left_sonar_offset_z" value="0.0" />
 	<!-- right sonar -->
-	<xacro:property name="right_sonar_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="right_sonar_offset_y" value="0.235" />
+	<xacro:property name="right_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="right_sonar_offset_y" value="0.0235" />
 	<xacro:property name="right_sonar_offset_z" value="0.0" />
 	<!-- back sonar -->
-	<xacro:property name="back_sonar_offset_x" value="0.229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="back_sonar_offset_y" value="0.235" />
+	<xacro:property name="back_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="back_sonar_offset_y" value="0.0235" />
 	<xacro:property name="back_sonar_offset_z" value="0.0" />
 
 	<!-- Flag to select the high or low quality model -->
@@ -86,7 +86,7 @@
   			<origin xyz="${wheel_1_offset_x} ${wheel_1_offset_y} ${wheel_1_offset_z}" rpy="0 0 0"/>
   		</xacro:omni_wheel>
 
-  		<xacro:omni_wheel prefix="$(arg prefix)front_right" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
+  		<xacro:omni_wheel prefix="$(arg prefix)front_right" parent="$(arg prefix)base_link" reflect="true" hq="${hq}">
   			<origin xyz="${wheel_2_offset_x} ${wheel_2_offset_y} ${wheel_2_offset_z}" rpy="0 0 ${PI}"/>
   		</xacro:omni_wheel>  		
 

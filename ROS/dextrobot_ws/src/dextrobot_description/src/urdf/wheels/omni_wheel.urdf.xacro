@@ -3,8 +3,8 @@
 
   <xacro:property name="M_PI" value="3.1415926535897931" />
   <!-- Wheels -->
-  <xacro:property name="omni_wheel_radius" value="0.04" />
-  <xacro:property name="omni_wheel_height" value="0.04" />
+  <xacro:property name="omni_wheel_radius" value="0.04" /> <!-- in m-->
+  <xacro:property name="omni_wheel_height" value="0.04" /> <!-- in m-->
   <xacro:property name="omni_wheel_mass" value="0.15" /> <!-- in kg-->
 
 
@@ -20,7 +20,7 @@
       <parent link="${parent}"/>
       <child link="${prefix}_wheel_link"/>
       <xacro:insert_block name="origin" />
-      <axis xyz="0 1 0" rpy="0 0 0" />
+      <axis xyz="1 0 0"/>
       <limit effort="100" velocity="100"/>
       <joint_properties damping="0.0" friction="0.0"/>
     </joint>
@@ -28,15 +28,15 @@
     <link name="${prefix}_wheel_link">
       <visual>
         <xacro:if value="${hq}">
-          <origin xyz="0 0 0" rpy="0 0 0" />
+          <origin xyz="0 -0.0425 -0.042" rpy="0 0 0" />
           <xacro:if value="${reflect}">
             <geometry>
-              <mesh filename="package://dextrobot_description/src/mesh/wheels/mechanum_wheel_1.dae" scale="0.1 0.1 0.1"/>
+              <mesh filename="package://dextrobot_description/src/mesh/wheels/mechanum_wheel_1.dae" scale="0.01 0.01 0.01"/>
             </geometry>
           </xacro:if>
           <xacro:unless value="${reflect}">
             <geometry>
-              <mesh filename="package://dextrobot_description/src/mesh/wheels/mechanum_wheel_2.dae" scale="0.1 0.1 0.1"/>
+              <mesh filename="package://dextrobot_description/src/mesh/wheels/mechanum_wheel_2.dae" scale="0.01 0.01 0.01"/>
             </geometry>
 		      </xacro:unless>
           </xacro:if>
