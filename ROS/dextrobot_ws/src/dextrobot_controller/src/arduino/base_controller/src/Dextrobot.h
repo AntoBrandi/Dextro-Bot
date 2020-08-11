@@ -5,37 +5,23 @@
   differently and independently in order to achieve the desired mouvement.
   Copyright (c) 2020 Antonio Brandi.  All right reserved.
 */
-#include <AccelStepper.h>
-#include <Wire.h>
-#include <MPU6050.h>
+#include <Stepper.h>
+#include <Imu.h>
 
-// MOTOR VARIABLES AND CONSTANTS
-// Mechanical and Electrical parameters
-#define STEP_ANGLE 1.8
-#define STEP_PER_REVOLUTION 360/STEP_ANGLE
-#define WHEEL_RADIUS 0.04 // meters
-
-// Define the PIN number of the Arduino board connected with the driver motors
-// MOTOR 1
+// Arduino PINS 
+// MOTOR 1 - Front Left
 #define dirPin_1 2
 #define stepPin_1 3
-// MOTOR 2
+// MOTOR 2 - Front Right
 #define dirPin_2 4
 #define stepPin_2 5
-// MOTOR 3
+// MOTOR 3 - Back Left
 #define dirPin_3 6
 #define stepPin_3 7
-// MOTOR 4
+// MOTOR 4 - Back Right
 #define dirPin_4 8
 #define stepPin_4 9
-// AccelStepper parameter
-#define motorInterfaceType 1
-// Stepper Motor control parameters
-// Max speed of the steppers in steps per second
-#define MAX_SPEED 1500
-// Max acceleration of the steppers in steps per second ^2
-#define MAX_ACCELERATION 1000
-// Speed levels for the robot mouvements
+
 // TODO: tune this
 #define SUPERSONIC 1500
 #define INSANE 1000
@@ -45,10 +31,6 @@
 #define SLOW 300
 
 
-// IMU VARIABLES AND CONSTANTS
-#define PI 3.1416
-#define MPU_addr 0x68
-
 #ifndef Dextrobot_h
 #define Dextrobot_h
 
@@ -56,21 +38,14 @@ class Dextrobot
 {
 private:
     // Motors
-    AccelStepper motor_1;
-    AccelStepper motor_2;
-    AccelStepper motor_3;
-    AccelStepper motor_4;
-
-    // IMU
-    MPU6050 mpu;
-    int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
-    int pitch = 0;
-    int roll = 0;
-    float yaw = 0;
-
-    // Sonar
+    Stepper motor_1 = Stepper(stepPin_1, dirPin_1);
+    Stepper motor_2 = Stepper(stepPin_2, dirPin_2);
+    Stepper motor_3 = Stepper(stepPin_3, dirPin_3);
+    Stepper motor_4 = Stepper(stepPin_4, dirPin_4);
+    Imu imu = Imu();
 
 public:
+    // Functions
     Dextrobot(/* args */);
     ~Dextrobot();
 
@@ -86,11 +61,6 @@ public:
     void rotateClockwise(int velocity);
     void rotateCounterClockwise(int velocity);
     void stop();
-    float convertToStepsPerSecond(float ms);
-
-    // sensors functions
-    float toRadians(float degree);
-    String readRPY();
 };
 
 

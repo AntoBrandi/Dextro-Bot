@@ -18,7 +18,11 @@
 
 // Topic Names
 #define ROS_TOPIC_IMU "imu_raw"
-#define ROS_TOPIC_RANGE "r"
+#define ROS_TOPIC_SONAR_FRONT "sonar_front"
+#define ROS_TOPIC_SONAR_LEFT "sonar_left"
+#define ROS_TOPIC_SONAR_RIGHT "sonar_right"
+#define ROS_TOPIC_SONAR_BACK "sonar_back"
+#define ROS_SONAR_FRAME_ID "sonar_ranger"
 
 // ROS message publish frequency
 #define PUBLISH_DELAY 100 // 10Hz
@@ -26,10 +30,7 @@
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
 // Publishers
-// IMU Publisher
-std_msgs::String imu_msg;
-ros::Publisher pub_imu(ROS_TOPIC_IMU, &imu_msg);
-// RANGE Publisher
+
 
 // Create an instance of the Robot with its methods
 Dextrobot robot;
@@ -47,9 +48,9 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
   float x_lin = linear.x;
   float y_lin = linear.y;
   float z_ang = angular.z;
-  int x_lin_steps = robot.convertToStepsPerSecond(x_lin);
-  int y_lin_steps = robot.convertToStepsPerSecond(y_lin);
-  int z_ang_steps = robot.convertToStepsPerSecond(z_ang);
+  // int x_lin_steps = robot.convertToStepsPerSecond(x_lin);
+  // int y_lin_steps = robot.convertToStepsPerSecond(y_lin);
+  // int z_ang_steps = robot.convertToStepsPerSecond(z_ang);
 
   // TODO: move the robot according to the received velocity message
 
@@ -73,10 +74,9 @@ ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", onCmdVelMsg );
 void setup() {
   // cerate and initialize a ROS node on this Arduino controller
   nh.initNode();
-  // Register the subscriber
+  // Register the Subscribers
   nh.subscribe(sub);
-  // Register the Publisher
-  nh.advertise(pub_imu);
+  // Register the Publishers
 
   // Init the robot and it's stepper motor
   robot = Dextrobot();
@@ -85,17 +85,6 @@ void setup() {
 void loop() { 
 
   if (millis() > publisher_timer) {
-    // IMU 
-    // request and compose the message
-    String message = robot.readRPY();
-
-    // Convert a string to a char array
-    int length = message.length();
-    char data_final[length+1];
-    message.toCharArray(data_final, length+1);
-    imu_msg.data = data_final;
-
-    pub_imu.publish(&imu_msg);
 
     // update the last time a message has been published via ROS
     publisher_timer = millis() + PUBLISH_DELAY;
