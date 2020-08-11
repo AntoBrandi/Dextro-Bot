@@ -6,7 +6,10 @@
   Copyright (c) 2020 Antonio Brandi.  All right reserved.
 */
 #include <AccelStepper.h>
+#include <Wire.h>
+#include <MPU6050.h>
 
+// MOTOR VARIABLES AND CONSTANTS
 // Mechanical and Electrical parameters
 #define STEP_ANGLE 1.8
 #define STEP_PER_REVOLUTION 360/STEP_ANGLE
@@ -41,16 +44,31 @@
 #define NORMAL 400
 #define SLOW 300
 
+
+// IMU VARIABLES AND CONSTANTS
+#define PI 3.1416
+#define MPU_addr 0x68
+
 #ifndef Dextrobot_h
 #define Dextrobot_h
 
 class Dextrobot
 {
 private:
+    // Motors
     AccelStepper motor_1;
     AccelStepper motor_2;
     AccelStepper motor_3;
     AccelStepper motor_4;
+
+    // IMU
+    MPU6050 mpu;
+    int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+    int pitch = 0;
+    int roll = 0;
+    float yaw = 0;
+
+    // Sonar
 
 public:
     Dextrobot(/* args */);
@@ -69,6 +87,10 @@ public:
     void rotateCounterClockwise(int velocity);
     void stop();
     float convertToStepsPerSecond(float ms);
+
+    // sensors functions
+    float toRadians(float degree);
+    String readRPY();
 };
 
 
