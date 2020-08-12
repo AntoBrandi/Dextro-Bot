@@ -14,12 +14,12 @@
 class Imu
 {
     private:
-        const int MPU_addr = 0x68;  // I2C address of the MPU-6050
+        static const int MPU_addr = 0x68;  // I2C address of the MPU-6050
         MPU6050 mpu;
         // linear acceleration
-        float AcX;
-        float AcY;
-        float AcZ;
+        float AcX = 0;
+        float AcY = 0;
+        float AcZ = 0;
         // orientation
         int pitch = 0;
         int roll = 0;

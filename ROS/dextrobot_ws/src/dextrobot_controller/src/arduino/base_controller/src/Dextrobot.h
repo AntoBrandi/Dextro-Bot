@@ -7,20 +7,33 @@
 */
 #include <Stepper.h>
 #include <Imu.h>
+#include <Sonar.h>
 
 // Arduino PINS 
 // MOTOR 1 - Front Left
-#define dirPin_1 2
-#define stepPin_1 3
+#define DIR_STEPPER_1 2
+#define STEP_STEPPER_1 3
 // MOTOR 2 - Front Right
-#define dirPin_2 4
-#define stepPin_2 5
+#define DIR_STEPPER_2 4
+#define STEP_STEPPER_2 5
 // MOTOR 3 - Back Left
-#define dirPin_3 6
-#define stepPin_3 7
+#define DIR_STEPPER_3 6
+#define STEP_STEPPER_3 7
 // MOTOR 4 - Back Right
-#define dirPin_4 8
-#define stepPin_4 9
+#define DIR_STEPPER_4 8
+#define STEP_STEPPER_4 9
+// SONAR 1 - Front sonar
+#define TRIGGER_FRONT_SONAR 3
+#define ECHO_FRONT_SONAR 2
+// SONAR 2 - Left sonar
+#define TRIGGER_LEFT_SONAR 5
+#define ECHO_LEFT_SONAR 4
+// SONAR 3 - Right sonar
+#define TRIGGER_RIGHT_SONAR 7
+#define ECHO_RIGHT_SONAR 6
+// SONAR 4 - Back sonar
+#define TRIGGER_BACK_SONAR 9
+#define ECHO_BACK_SONAR 8
 
 // TODO: tune this
 #define SUPERSONIC 1500
@@ -38,11 +51,16 @@ class Dextrobot
 {
 private:
     // Motors
-    Stepper motor_1 = Stepper(stepPin_1, dirPin_1);
-    Stepper motor_2 = Stepper(stepPin_2, dirPin_2);
-    Stepper motor_3 = Stepper(stepPin_3, dirPin_3);
-    Stepper motor_4 = Stepper(stepPin_4, dirPin_4);
+    Stepper motor_1 = Stepper(STEP_STEPPER_1, DIR_STEPPER_1);
+    Stepper motor_2 = Stepper(STEP_STEPPER_2, DIR_STEPPER_2);
+    Stepper motor_3 = Stepper(STEP_STEPPER_3, DIR_STEPPER_3);
+    Stepper motor_4 = Stepper(STEP_STEPPER_4, DIR_STEPPER_4);
     Imu imu = Imu();
+    Sonar sonar_1 = Sonar(TRIGGER_FRONT_SONAR, ECHO_FRONT_SONAR);
+    Sonar sonar_2 = Sonar(TRIGGER_LEFT_SONAR, ECHO_LEFT_SONAR);
+    Sonar sonar_3 = Sonar(TRIGGER_RIGHT_SONAR, ECHO_RIGHT_SONAR);
+    Sonar sonar_4 = Sonar(TRIGGER_BACK_SONAR, ECHO_BACK_SONAR);
+    
 
 public:
     // Functions
