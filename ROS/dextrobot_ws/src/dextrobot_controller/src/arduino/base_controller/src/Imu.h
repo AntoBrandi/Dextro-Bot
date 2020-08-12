@@ -25,7 +25,6 @@ class Imu
         int roll = 0;
         float yaw = 0;
         float toRadians(float degree);
-        geometry_msgs::Quaternion quaternionFromRPY(float r, float p, float y);
     public:
         Imu(/* args */);
         ~Imu();

@@ -68,9 +68,25 @@ std_msgs::String Imu::composeStringMessage(){
     return imu_msg;
 }
 
-// Function that converts an orientation from euler RPY to a quaternion
-// It assumes that the imput angles are provided in radians
-geometry_msgs::Quaternion quaternionFromRPY(float r, float p, float y){
+// !!! ALERT !!!
+// Use this function only if you are using and Arduino MEGA or similar. Otherwise
+// this message will not be sent over ROS because it is too large for an Arduino UNO or similar
+sensor_msgs::Imu Imu::composeImuMessage(ros::Time now){
+    sensor_msgs::Imu imu_msg;
+    // compose the header
+    imu_msg.header.stamp = now;
+    imu_msg.header.frame_id = FRAME_ID;
+
+    // compose the body
+    imu_msg.linear_acceleration.x = AcX;
+    imu_msg.linear_acceleration.y = AcY;
+    imu_msg.linear_acceleration.z = AcZ;
+
+    // Convert RPY to quaternion
+    float r = toRadians(roll);
+    float p = toRadians(pitch);
+    float y = toRadians(yaw);
+
     geometry_msgs::Quaternion quaternion;
 
     double cy = cos(y * 0.5);
@@ -85,23 +101,7 @@ geometry_msgs::Quaternion quaternionFromRPY(float r, float p, float y){
     quaternion.y = cr * sp * cy + sr * cp * sy;
     quaternion.z = cr * cp * sy - sr * sp * cy;
 
-    return quaternion;
-}
-
-// !!! ALERT !!!
-// Use this function only if you are using and Arduino MEGA or similar. Otherwise
-// this message will not be sent over ROS because it is too large for an Arduino UNO or similar
-sensor_msgs::Imu Imu::composeImuMessage(ros::Time now){
-    sensor_msgs::Imu imu_msg;
-    // compose the header
-    imu_msg.header.stamp = now;
-    imu_msg.header.frame_id = FRAME_ID;
-
-    // compose the body
-    imu_msg.linear_acceleration.x = AcX;
-    imu_msg.linear_acceleration.y = AcY;
-    imu_msg.linear_acceleration.z = AcZ;
-    imu_msg.orientation = quaternionFromRPY(toRadians(roll), toRadians(pitch), toRadians(yaw));
+    imu_msg.orientation = quaternion;
 
     return imu_msg;
 }

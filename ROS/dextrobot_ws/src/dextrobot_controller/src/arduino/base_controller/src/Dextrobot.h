@@ -54,15 +54,16 @@ private:
     Stepper motor_1 = Stepper(STEP_STEPPER_1, DIR_STEPPER_1);
     Stepper motor_2 = Stepper(STEP_STEPPER_2, DIR_STEPPER_2);
     Stepper motor_3 = Stepper(STEP_STEPPER_3, DIR_STEPPER_3);
-    Stepper motor_4 = Stepper(STEP_STEPPER_4, DIR_STEPPER_4);
+    Stepper motor_4 = Stepper(STEP_STEPPER_4, DIR_STEPPER_4);    
+
+public:
+    // Attributes
     Imu imu = Imu();
     Sonar sonar_1 = Sonar(TRIGGER_FRONT_SONAR, ECHO_FRONT_SONAR);
     Sonar sonar_2 = Sonar(TRIGGER_LEFT_SONAR, ECHO_LEFT_SONAR);
     Sonar sonar_3 = Sonar(TRIGGER_RIGHT_SONAR, ECHO_RIGHT_SONAR);
     Sonar sonar_4 = Sonar(TRIGGER_BACK_SONAR, ECHO_BACK_SONAR);
-    
 
-public:
     // Functions
     Dextrobot(/* args */);
     ~Dextrobot();
@@ -79,6 +80,9 @@ public:
     void rotateClockwise(int velocity);
     void rotateCounterClockwise(int velocity);
     void stop();
+
+    // sensor functions
+    void sense();
 };
 
 

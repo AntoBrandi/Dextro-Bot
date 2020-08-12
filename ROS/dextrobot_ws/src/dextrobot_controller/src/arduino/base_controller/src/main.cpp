@@ -17,12 +17,14 @@
 #include <std_msgs/String.h>
 
 // Topic Names
+// PUBLISH TOPIC
 #define ROS_TOPIC_IMU "imu_raw"
-#define ROS_TOPIC_SONAR_FRONT "sonar_front"
-#define ROS_TOPIC_SONAR_LEFT "sonar_left"
-#define ROS_TOPIC_SONAR_RIGHT "sonar_right"
-#define ROS_TOPIC_SONAR_BACK "sonar_back"
-#define ROS_SONAR_FRAME_ID "sonar_ranger"
+#define ROS_TOPIC_SONAR_FRONT "range_front_msg"
+#define ROS_TOPIC_range_left_msg "range_left_msg"
+#define ROS_TOPIC_range_right_msg "range_right_msg"
+#define ROS_TOPIC_range_back_msg "range_back_msg"
+// SUBSCRIBE TOPIC
+#define ROS_TOPIC_CMD_VEL "cmd_vel"
 
 // ROS message publish frequency
 #define PUBLISH_DELAY 100 // 10Hz
@@ -30,13 +32,22 @@
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
 // Publishers
-
+sensor_msgs::Imu imu_msg;
+sensor_msgs::Range range_front_msg;
+sensor_msgs::Range range_left_msg;
+sensor_msgs::Range range_right_msg;
+sensor_msgs::Range range_back_msg;
+ros::Publisher pub_range_front(ROS_TOPIC_SONAR_FRONT, &range_front_msg);
+ros::Publisher pub_range_left(ROS_TOPIC_range_left_msg, &range_left_msg);
+ros::Publisher pub_range_right(ROS_TOPIC_range_right_msg, &range_right_msg);
+ros::Publisher pub_range_back(ROS_TOPIC_range_back_msg, &range_back_msg);
+ros::Publisher pub_imu(ROS_TOPIC_IMU, &imu_msg);
 
 // Create an instance of the Robot with its methods
 Dextrobot robot;
 
 // Record the last time a publish operation happened
-long publisher_timer;
+long publisher_timer = 0;
 
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
@@ -67,24 +78,44 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 
 
 // Subscribers
-// CMD_VEL subscriber
-ros::Subscriber<geometry_msgs::Twist> sub("/cmd_vel", onCmdVelMsg );
+// CMD_VEL 
+ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel(ROS_TOPIC_CMD_VEL, onCmdVelMsg );
 
 
 void setup() {
   // cerate and initialize a ROS node on this Arduino controller
   nh.initNode();
   // Register the Subscribers
-  nh.subscribe(sub);
+  nh.subscribe(sub_cmd_vel);
   // Register the Publishers
+  nh.advertise(pub_range_front);
+  nh.advertise(pub_range_left);
+  nh.advertise(pub_range_right);
+  nh.advertise(pub_range_back);
+  nh.advertise(pub_imu);
 
   // Init the robot and it's stepper motor
   robot = Dextrobot();
 }
 
 void loop() { 
+  // read the actual status of the sensors
+  robot.sense();
 
   if (millis() > publisher_timer) {
+    // compose and publish the sensor messages
+    range_front_msg = robot.sonar_1.composeRangeMessage(nh.now());
+    range_left_msg = robot.sonar_2.composeRangeMessage(nh.now());
+    range_right_msg = robot.sonar_3.composeRangeMessage(nh.now());
+    range_back_msg = robot.sonar_4.composeRangeMessage(nh.now());
+    imu_msg = robot.imu.composeImuMessage(nh.now());
+
+    // publish the messages
+    pub_range_front.publish(&range_front_msg);
+    pub_range_left.publish(&range_left_msg);
+    pub_range_right.publish(&range_right_msg);
+    pub_range_back.publish(&range_back_msg);
+    pub_imu.publish(&imu_msg);    
 
     // update the last time a message has been published via ROS
     publisher_timer = millis() + PUBLISH_DELAY;

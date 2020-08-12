@@ -18,10 +18,15 @@ Sonar::~Sonar()
 }
 
 void Sonar::sense(){
-    // Read From sensors
-    distance = sonar.ping_cm(); 
-    // filter the reading
-    distance = KFilter.updateEstimate(distance);
+    if (millis() > lastScan){
+        // Read From sensors
+        distance = sonar.ping_cm(); 
+        // filter the reading
+        distance = KFilter.updateEstimate(distance);
+
+        // update the last scan time 
+        lastScan = millis() + PING_INTERVAL;
+    }   
 }
 
 

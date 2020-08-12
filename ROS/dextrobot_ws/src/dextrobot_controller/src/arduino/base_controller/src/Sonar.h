@@ -32,6 +32,7 @@ class Sonar
     private:
         uint8_t triggerPin;
         uint8_t echoPin;
+        long lastScan = 0;
         NewPing sonar = NewPing(triggerPin, echoPin, MAX_DISTANCE);
 
         // Create a Kalman Filter that will be applied to the readings of all the sonar sensors
