@@ -16,5 +16,10 @@
 			"path": "..\\..\\..\\..\\..\\..\\..\\Arduino\\ultrasonic_range_publisher"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"cmath": "cpp",
+			"xutility": "cpp"
+		}
+	}
 }
