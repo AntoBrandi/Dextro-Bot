@@ -10,30 +10,32 @@
 #include <Sonar.h>
 
 // Arduino PINS 
+// CNC Shield
+#define ENABLE_SHIELD 8
 // MOTOR 1 - Front Left
-#define DIR_STEPPER_1 2
-#define STEP_STEPPER_1 3
+#define DIR_STEPPER_1 5
+#define STEP_STEPPER_1 2
 // MOTOR 2 - Front Right
-#define DIR_STEPPER_2 4
-#define STEP_STEPPER_2 5
+#define DIR_STEPPER_2 6
+#define STEP_STEPPER_2 3
 // MOTOR 3 - Back Left
-#define DIR_STEPPER_3 6
-#define STEP_STEPPER_3 7
+#define DIR_STEPPER_3 7
+#define STEP_STEPPER_3 4
 // MOTOR 4 - Back Right
-#define DIR_STEPPER_4 8
-#define STEP_STEPPER_4 9
+#define DIR_STEPPER_4 13
+#define STEP_STEPPER_4 12
 // SONAR 1 - Front sonar
-#define TRIGGER_FRONT_SONAR 3
-#define ECHO_FRONT_SONAR 2
+#define TRIGGER_FRONT_SONAR 21
+#define ECHO_FRONT_SONAR 22
 // SONAR 2 - Left sonar
-#define TRIGGER_LEFT_SONAR 5
-#define ECHO_LEFT_SONAR 4
+#define TRIGGER_LEFT_SONAR 23
+#define ECHO_LEFT_SONAR 24
 // SONAR 3 - Right sonar
-#define TRIGGER_RIGHT_SONAR 7
-#define ECHO_RIGHT_SONAR 6
+#define TRIGGER_RIGHT_SONAR 25
+#define ECHO_RIGHT_SONAR 26
 // SONAR 4 - Back sonar
-#define TRIGGER_BACK_SONAR 9
-#define ECHO_BACK_SONAR 8
+#define TRIGGER_BACK_SONAR 27
+#define ECHO_BACK_SONAR 28
 
 // TODO: tune this
 #define SUPERSONIC 1500
@@ -69,16 +71,16 @@ public:
     ~Dextrobot();
 
     // omnidirectional mouvement functions
-    void goForward(int velocity);
-    void goBackward(int velocity);
-    void goRight(int velocity);
-    void goLeft(int velocity);
-    void goForwardRight(int velocity);
-    void goForwardLeft(int velocity);
-    void goBackwardRight(int velocity);
-    void goBackwardLeft(int velocity);
-    void rotateClockwise(int velocity);
-    void rotateCounterClockwise(int velocity);
+    void goForward(float velocity = NORMAL);
+    void goBackward(float velocity = NORMAL);
+    void goRight(float velocity = NORMAL);
+    void goLeft(float velocity = NORMAL);
+    void goForwardRight(float velocity = NORMAL);
+    void goForwardLeft(float velocity = NORMAL);
+    void goBackwardRight(float velocity = NORMAL);
+    void goBackwardLeft(float velocity = NORMAL);
+    void rotateClockwise(float velocity = NORMAL);
+    void rotateCounterClockwise(float velocity = NORMAL);
     void stop();
 
     // sensor functions

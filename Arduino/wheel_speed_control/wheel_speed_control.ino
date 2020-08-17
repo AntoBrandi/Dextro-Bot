@@ -2,19 +2,20 @@
 
 // Define the PIN number of the Arduino board connected with the driver motors
 // MOTOR 1
-#define dirPin_1 2
-#define stepPin_1 3
+#define dirPin_1 5
+#define stepPin_1 2
 // MOTOR 2
-#define dirPin_2 4
-#define stepPin_2 5
+#define dirPin_2 6
+#define stepPin_2 3
 // MOTOR 3
-#define dirPin_3 6
-#define stepPin_3 7
-// MOTOR 4
-#define dirPin_4 8
-#define stepPin_4 9
+#define dirPin_3 7
+#define stepPin_3 4
+// MOTOR 54
+#define dirPin_4 13
+#define stepPin_4 12
 // AccelStepper parameter
 #define motorInterfaceType 1
+#define enablePin 8
 
 // Stepper Motor control parameters
 // Max speed of the steppers in steps per second
@@ -37,6 +38,10 @@ AccelStepper motor_3 = AccelStepper(motorInterfaceType, stepPin_3, dirPin_3);
 AccelStepper motor_4 = AccelStepper(motorInterfaceType, stepPin_4, dirPin_4);
 
 void setup() {
+  // enable the stepper
+  pinMode(enablePin, OUTPUT);
+  digitalWrite(enablePin, LOW);
+  
   // open the serial terminal for debug purposes
   Serial.begin(9600);
   
@@ -83,9 +88,9 @@ void loop() {
 void goForward(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(velocity);
-  motor_2.setSpeed(velocity);
+  motor_2.setSpeed(-velocity);
   motor_3.setSpeed(velocity);
-  motor_4.setSpeed(velocity);
+  motor_4.setSpeed(-velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -96,9 +101,9 @@ void goForward(int velocity){
 void goBackward(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(-velocity);
-  motor_2.setSpeed(-velocity);
+  motor_2.setSpeed(velocity);
   motor_3.setSpeed(-velocity);
-  motor_4.setSpeed(-velocity);
+  motor_4.setSpeed(velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -109,9 +114,9 @@ void goBackward(int velocity){
 void goRight(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(velocity);
-  motor_2.setSpeed(-velocity);
+  motor_2.setSpeed(velocity);
   motor_3.setSpeed(-velocity);
-  motor_4.setSpeed(velocity);
+  motor_4.setSpeed(-velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -122,9 +127,9 @@ void goRight(int velocity){
 void goLeft(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(-velocity);
-  motor_2.setSpeed(velocity);
+  motor_2.setSpeed(-velocity);
   motor_3.setSpeed(velocity);
-  motor_4.setSpeed(-velocity);
+  motor_4.setSpeed(velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -137,7 +142,7 @@ void goForwardRight(int velocity){
   motor_1.setSpeed(velocity);
   motor_2.setSpeed(0);
   motor_3.setSpeed(0);
-  motor_4.setSpeed(velocity);
+  motor_4.setSpeed(-velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -148,7 +153,7 @@ void goForwardRight(int velocity){
 void goForwardLet(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(0);
-  motor_2.setSpeed(velocity);
+  motor_2.setSpeed(-velocity);
   motor_3.setSpeed(velocity);
   motor_4.setSpeed(0);
   // Step the motor with a constant speed as set by setSpeed():
@@ -161,7 +166,7 @@ void goForwardLet(int velocity){
 void goBackwardRight(int velocity){
   // Set the speed in steps per second:
   motor_1.setSpeed(0);
-  motor_2.setSpeed(-velocity);
+  motor_2.setSpeed(velocity);
   motor_3.setSpeed(-velocity);
   motor_4.setSpeed(0);
   // Step the motor with a constant speed as set by setSpeed():
@@ -176,7 +181,7 @@ void goBackwardLeft(int velocity){
   motor_1.setSpeed(-velocity);
   motor_2.setSpeed(0);
   motor_3.setSpeed(0);
-  motor_4.setSpeed(-velocity);
+  motor_4.setSpeed(velocity);
   // Step the motor with a constant speed as set by setSpeed():
   motor_1.runSpeed();
   motor_2.runSpeed();
@@ -188,9 +193,9 @@ void goBackwardLeft(int velocity){
 void moveRobotTo(int steps_1, int steps_2, int steps_3, int steps_4){
   // set a target position in steps for each motor
   motor_1.moveTo(steps_1);
-  motor_2.moveTo(steps_2);
+  motor_2.moveTo(-steps_2);
   motor_3.moveTo(steps_3);
-  motor_4.moveTo(steps_4);
+  motor_4.moveTo(-steps_4);
   // Reach the position goal
   motor_1.runToPosition();
   motor_2.runToPosition();

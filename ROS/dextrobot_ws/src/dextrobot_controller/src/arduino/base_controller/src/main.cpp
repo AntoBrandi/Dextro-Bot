@@ -49,6 +49,10 @@ Dextrobot robot;
 // Record the last time a publish operation happened
 long publisher_timer = 0;
 
+// Keep track of the next action that each stepper should take
+int action = 0;
+float velocity = 0;
+
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Twist& msg){
@@ -59,21 +63,51 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
   float x_lin = linear.x;
   float y_lin = linear.y;
   float z_ang = angular.z;
-  // int x_lin_steps = robot.convertToStepsPerSecond(x_lin);
-  // int y_lin_steps = robot.convertToStepsPerSecond(y_lin);
-  // int z_ang_steps = robot.convertToStepsPerSecond(z_ang);
 
-  // TODO: move the robot according to the received velocity message
+  // Move the robot according to the received velocity message
+  if(x_lin>0){
+    velocity = x_lin;
+    if(y_lin>0){
+      // go forward right
+      action = 3;
+    } else if (y_lin<0){
+      // go forward left
+      action = 2;
+    } else{
+      // go forward
+      action = 1;
+    }
+  }
 
-  // Ping back
-  // std_msgs/String does not accept string but char array
-  // String response = "Applying X: " + String(x_lin_steps) + " Y: " + String(y_lin_steps) + " Rotation Z: " + String(z_ang_steps);
-  // char p[response.length()];
-  // for (int i=0; i<sizeof(p);i++){
-  //   p[i] = response[i];
-  // }
-  // message.data = p;
-  // pub.publish(&message);
+  if(x_lin<0){
+    velocity = x_lin;
+    if(y_lin>0){
+      // go backward right
+      action = 6;
+    } else if (y_lin<0){
+      // go backward left
+      action = 5;
+    } else{
+      // go backward
+      action = 4;
+    }
+  }
+
+  if(z_ang>0){
+    velocity = z_ang;
+    // rotate clockwise
+    action = 7;
+  } else if(z_ang<0){
+    velocity = z_ang;
+    // rotate counterclockwise
+    action = 8;
+  }
+
+  if(x_lin==0 && y_lin==0 && z_ang==0){
+    velocity = 0;
+    // stop the robot
+    action = 0;
+  }
 }
 
 
@@ -99,6 +133,40 @@ void setup() {
 }
 
 void loop() { 
+  // move the stepper motor if needed
+  switch (action)
+  {
+    case 0:
+      robot.stop();
+      break;
+    case 1:
+      robot.goForward(velocity);
+      break;
+    case 2:
+      robot.goForwardLeft(velocity);
+      break;
+    case 3:
+      robot.goForwardRight(velocity);
+      break;
+    case 4:
+      robot.goBackward(velocity);
+      break;
+    case 5:
+      robot.goBackwardLeft(velocity);
+      break;
+    case 6:
+      robot.goBackwardRight(velocity);
+      break;
+    case 7:
+      robot.rotateClockwise(velocity);
+      break;
+    case 8:
+      robot.rotateCounterClockwise(velocity);
+      break; 
+    default:
+      robot.stop();
+      break;
+  }
   // read the actual status of the sensors
   robot.sense();
 
