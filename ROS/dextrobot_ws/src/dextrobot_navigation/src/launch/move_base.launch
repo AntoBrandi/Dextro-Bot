@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="prefix" default="dextrobot_"/>
+  <arg name="cmd_vel_topic" default="move_base/cmd_vel"/> <!-- using twist mux -->
+  <arg name="odom_topic" default="/dextrobot_a/robotnik_base_control/odom"/>
+  <arg name="global_frame" default="$(arg prefix)map"/>
+  <arg name="odom_frame" default="$(arg prefix)odom"/>
+  <arg name="base_frame" default="$(arg prefix)base_footprint"/>
+  <arg name="scan_topic" default="front_laser/scan"/>
+  <arg name="omni" default="true"/>
+  <arg name="waypoint_global_planner" default="false"/>
+  <arg name="move_base_pkg" default="move_base"/>
+
+  <!-- Run move_base -->
+
+  <node pkg="$(arg move_base_pkg)" type="$(arg move_base_pkg)" respawn="false" name="$(arg move_base_pkg)" launch-prefix="gdb -ex run --args" output="screen">
+    <param name="tf_timeout" value="0.5"/>
+    <param name="global_frame" value="$(arg global_frame)"/>
+    <param name="map_frame" value="$(arg global_frame)"/>
+	  <param name="robot_frame" value="$(arg base_frame)"/>
+	  <param name="global_costmap/obstacle_layer/scan/sensor_frame" value="$(arg prefix)front_laser_link"/>
+	  <param name="local_costmap/obstacle_layer/scan/sensor_frame" value="$(arg prefix)front_laser_link"/>
+	  <param name="global_costmap/obstacle_layer/scan/topic" value="$(arg scan_topic)"/>
+	  <param name="local_costmap/obstacle_layer/scan/topic" value="$(arg scan_topic)"/>
+	  <param name="local_costmap/global_frame" value="$(arg odom_frame)"/>
+	  <param name="local_costmap/robot_base_frame" value="$(arg base_frame)"/>
+	  <param name="global_costmap/global_frame" value="$(arg global_frame)"/>
+	  <param name="global_costmap/robot_base_frame" value="$(arg base_frame)"/>
+	  <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame)"/>
+    <param name="TebLocalPlannerROS/map_frame" value="$(arg global_frame)"/>
+	  <param name="TebLocalPlannerROS/odom_topic" value="$(arg odom_topic)"/>
+    <param name="SBPLLatticePlanner/primitive_filename" value="$(find sbpl_lattice_planner)/matlab/mprim/omni_5cm.mprim" />
+	  <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+	  <remap from="odom" to="$(arg odom_topic)" />
+
+    <rosparam file="$(find dextrobot_navigation)/src/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	  <rosparam file="$(find dextrobot_navigation)/src/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find dextrobot_navigation)/src/config/local_costmap_params.yaml" command="load" />
+	  <rosparam file="$(find dextrobot_navigation)/src/config/global_costmap_params_map.yaml" command="load" />
+
+	  <rosparam file="$(find dextrobot_navigation)/config/move_base.yaml" command="load" />
+    <param if="$(arg waypoint_global_planner)" name="base_global_planner" value="waypoint_global_planner/WaypointGlobalPlanner" />
+	
+	  <rosparam file="$(find dextrobot_navigation)/config/teb_local_planner_omni_params.yaml" command="load" />
+  </node>
+
+  <group if="$(eval arg('move_base_pkg') == 'mbf_costmap_nav')">
+    <node pkg="dextrobot_navigation" type="move_base_flex.py" name="move_base" respawn="true"> 
+    </node>
+  </group>
+
+</launch>

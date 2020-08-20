@@ -1,0 +1,13 @@
+global_costmap:
+  global_frame: dextrobot_a_odom
+  robot_base_frame: dextrobot_a_base_footprint
+  update_frequency: 5.0
+  publish_frequency: 5.0
+  width: 20.0
+  height: 20.0 
+  rolling_window: false
+  footprint_padding: 0.15
+  
+
+
+

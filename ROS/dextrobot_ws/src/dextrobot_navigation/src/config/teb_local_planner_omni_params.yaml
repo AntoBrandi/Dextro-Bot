@@ -1,0 +1,127 @@
+# selection of the controller for move_base
+base_local_planner: teb_local_planner/TebLocalPlannerROS
+
+# selection of the controller for move_base_flex
+controllers:
+   - name: 'TebLocalPlannerROS'
+     type: 'teb_local_planner/TebLocalPlannerROS'
+
+
+TebLocalPlannerROS:
+
+  # Recovery
+  
+  oscillation_recovery: true
+
+# odom_topic: odom
+# map_frame: map
+
+  # Trajectory
+
+  teb_autosize: True
+  dt_ref: 0.2
+  dt_hysteresis: 0.02
+  min_samples: 3
+  global_plan_overwrite_orientation: false
+  global_plan_viapoint_sep: 0.1 # negative, do not use viapoints. positive, use them. the actual value does not matter
+  via_points_ordered: false
+  max_global_plan_lookahead_dist: 1.5
+  force_reinit_new_goal_dist: 1.0
+  feasibility_check_no_poses: 8
+  publish_feedback: false
+  shrink_horizon_backup: true
+  allow_init_with_backwards_motion: true
+  exact_arc_length: true
+  shrink_horizon_min_duration: 10
+
+  # Robot
+
+  max_vel_x: 1.0
+  max_vel_x_backwards: 0.4
+  max_vel_theta: 2.0
+  max_vel_y: 0.6 # not used, is differential
+  acc_lim_y: 0.3 # not used, is differential
+  acc_lim_x: 0.5
+  acc_lim_theta: 2.0
+  min_turning_radius: 0.0
+  wheelbase: 0.0 # not used, is differential
+  cmd_angle_instead_rotvel: false # not used, is differential
+  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
+    type: "polygon"
+
+    #Hokuyo
+#vertices: [[0.724, 0.197], [0.724, -0.197], [-0.679,-0.197], [-0.679,0.197]]
+
+    #Datalogic 
+    vertices: [[0.850, 0.28933], [0.850, -0.18667], [-0.850,-0.28933], [-0.850,0.18667]]
+
+
+  # GoalTolerance
+
+  xy_goal_tolerance: 0.10
+  yaw_goal_tolerance: 0.10
+  free_goal_vel: False
+
+  # Obstacles
+
+  min_obstacle_dist: 0.15 # minimum distance to obstacle: it depends on the footprint_model
+  include_costmap_obstacles: True # use the local costmap
+  costmap_obstacles_behind_robot_dist: 1.0 # distance at which obstacles behind the robot are taken into account
+  obstacle_poses_affected: 30 # unused if legacy_obstacle_association is false
+  inflation_dist: 1.5 # greater than min_obstacle_dist to take effect
+  legacy_obstacle_association: false
+  obstacle_association_force_inclusion_factor: 1.5 # the obstacles that will be taken into account are those closer than min_obstacle_dist*factor, if legacy is false
+  obstacle_association_cutoff_factor: 5.0 # the obstacles that are further than min_obstacle_dist * factor will not be taken into account, if legacy is false
+  #costmap_converter_plugin: "costmap_converter::CostmapToPolygonsDBSMCCH"
+  #costmap_converter_plugin: "costmap_converter::CostmapToLinesDBSRANSAC"
+  #costmap_converter_plugin: "costmap_converter::CostmapToLinesDBSMCCH"
+  #costmap_converter_plugin: "costmap_converter::CostmapToPolygonsDBSConcaveHull"
+  #costmap_converter_plugin: "" # deactivate plugin
+  #costmap_converter_spin_thread: True
+  #costmap_converter_rate: 5
+  # costmap_converter/CostmapToLinesDBSRANSAC:
+  #    cluster_max_distance: 0.4
+
+  # Optimization
+  max_total_cost: 500
+  no_inner_iterations: 7
+  no_outer_iterations: 7
+  optimization_activate: True # optimize
+  optimization_verbose: False
+  penalty_epsilon: 0.0
+  weight_max_vel_x: 100
+  weight_max_vel_y: 100
+  weight_max_vel_theta: 100
+  weight_acc_lim_x: 10
+  weight_acc_lim_y: 100
+  weight_acc_lim_theta: 100
+  weight_kinematics_nh: 0 # is a nonholonomic robot
+  weight_kinematics_forward_drive: 0 # prefer forward driving, for differential
+  weight_kinematics_turning_radius: 0 # prefer turns that respect the min_turning_radius, not used if differential (min_turning_radius = 0)
+  weight_optimaltime: 100 # prefer trajectories with less transition time
+  weight_obstacle: 200 # prefer trajectories that respect the min_obstacle_dist
+  weight_inflation: 1 # prefer trajectories that respect the inflation of the obstacles
+  weight_dynamic_obstacle: 0 # not in use yet
+  weight_viapoint: 100 # prefer trajectories that respect the viapoints in the global path
+  weight_viapointorientation: 100 # prefer trajectories that respect the orientation of the poses in the viapoints of the global path
+  weight_adapt_factor: 1 # factor to multiply some weights (currently only weight_obstacle) at each iteration (gives better results than a huge value for the weight)
+
+  # Homotopy Class Planner
+
+  enable_homotopy_class_planning: False # currently not used
+  simple_exploration: False
+  enable_multithreading: True
+  max_number_classes: 4
+  selection_cost_hysteresis: 1.0
+  selection_obst_cost_scale: 100.0
+  selection_viapoint_cost_scale: 1.0
+  selection_alternative_time_cost: False
+  roadmap_graph_no_samples: 15
+  roadmap_graph_area_width: 6
+  h_signature_prescaler: 1.0
+  h_signature_threshold: 0.1
+  obstacle_heading_threshold: 0.45
+  roadmap_graph_no_samples: 15
+  roadmap_graph_area_width: 5
+  obstacle_keypoint_offset: 0.1
+  visualize_hc_graph: False

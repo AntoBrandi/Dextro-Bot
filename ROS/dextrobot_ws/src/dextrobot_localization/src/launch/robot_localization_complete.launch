@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- roslaunch arguments -->
+  <arg name="debug" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="wait_for_datum" default="false" />
+  <arg name="prefix" default="dextrobot_a_"/>
+  
+  <!-- Transform from odom to base_footprint (IMU and odometry) -->
+  <include file="$(find dextrobot_localization)/launch/robot_localization_odom.launch">
+	  <arg name="prefix" value="$(arg prefix)"/>
+  </include>
+
+  <!-- Transform from world to odom (IMU, odometry and GPS) -->
+  <include file="$(find dextrobot_localization)/launch/robot_localization_world.launch">
+	  <arg name="prefix" value="$(arg prefix)"/>
+  </include>
+
+  <!-- Get GPS odometry -->
+  <include file="$(find dextrobot_localization)/launch/navsat_transform_node.launch">
+	<arg name="wait_for_datum" value="$(arg wait_for_datum)" />
+  </include>
+
+</launch>

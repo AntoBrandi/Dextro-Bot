@@ -1,0 +1,63 @@
+  resolution: 0.05 
+
+#Hokuyo
+#  footprint: [[0.724, 0.197], [0.724, -0.197], [-0.679,-0.197], [-0.679,0.197]]
+
+  #Datalogic
+  footprint: [[0.850, 0.28933], [0.850, -0.18667], [-0.850,-0.28933], [-0.850,0.18667]]
+
+  plugins:
+      - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+      - { name: static_map,     type: "costmap_2d::StaticLayer"}  
+      - { name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+  static_map:
+        lethal_cost_threshold: 70
+        static_map: true
+        track_unknown_space: false
+        unknown_cost_value: 1
+        trinary_costmap: false
+        use_maximum: true
+
+
+# The following is note about the setting of some of the following parameters.
+# An obstacle may stay in the costmap even if has been removed there is nothing behind it in the range that can be seen by the lidar. 
+# In order to avoid this problem a specific configuration is needed:
+# - all the sensor surces should return inf for the rays that do not detect anything in the max range
+# - inf_is_valid should be set to true, which converts inf to the maximum range for the sensor
+# - obstacle_range should be less than the maximum range of the sensor.
+
+  obstacle_layer:
+      obstacle_range: 9  
+      raytrace_range: 50
+      observation_sources: front_scan rear_scan  #scan # front_laser rear_laser front_rgbd_to_scan
+ 
+      scan: 
+        sensor_frame: dextrobot_a_base_link
+        data_type: LaserScan
+        topic: scan
+        marking: true
+        clearing: true
+        inf_is_valid: true
+
+      front_scan:
+        sensor_frame: dextrobot_a_base_link
+        data_type: LaserScan
+        topic: front_laser/scan
+        marking: true
+        clearing: true
+        inf_is_valid: true
+
+      rear_scan:
+        sensor_frame: dextrobot_a_base_link
+        data_type: LaserScan
+        topic: rear_laser/scan
+        marking: true
+        clearing: true
+        inf_is_valid: true
+        
+
+
+  inflation_layer:
+      inflation_radius: 1.1
+      cost_scaling_factor: 8
