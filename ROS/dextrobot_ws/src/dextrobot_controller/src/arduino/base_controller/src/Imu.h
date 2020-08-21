@@ -15,7 +15,6 @@ class Imu
 {
     private:
         static const int MPU_addr = 0x68;  // I2C address of the MPU-6050
-        MPU6050 mpu;
         // linear acceleration
         float AcX = 0;
         float AcY = 0;
@@ -26,12 +25,12 @@ class Imu
         float yaw = 0;
         float toRadians(float degree);
     public:
+        MPU6050 mpu;
         Imu(/* args */);
         ~Imu();
         void sense();
         std_msgs::String composeStringMessage();
         sensor_msgs::Imu composeImuMessage(ros::Time now);
-        void calibrate();
 };
 
 

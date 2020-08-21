@@ -25,17 +25,17 @@
 #define DIR_STEPPER_4 13
 #define STEP_STEPPER_4 12
 // SONAR 1 - Front sonar
-#define TRIGGER_FRONT_SONAR 50
-#define ECHO_FRONT_SONAR 52
+#define TRIGGER_FRONT_SONAR 30
+#define ECHO_FRONT_SONAR 31
 // SONAR 2 - Left sonar
-#define TRIGGER_LEFT_SONAR 24
-#define ECHO_LEFT_SONAR 22
+#define TRIGGER_LEFT_SONAR 22
+#define ECHO_LEFT_SONAR 23
 // SONAR 3 - Right sonar
-#define TRIGGER_RIGHT_SONAR 53
-#define ECHO_RIGHT_SONAR 51
+#define TRIGGER_RIGHT_SONAR 26
+#define ECHO_RIGHT_SONAR 27
 // SONAR 4 - Back sonar
-#define TRIGGER_BACK_SONAR 35
-#define ECHO_BACK_SONAR 37
+#define TRIGGER_BACK_SONAR 28
+#define ECHO_BACK_SONAR 29
 
 // TODO: tune this
 #define SUPERSONIC 1500
@@ -60,7 +60,7 @@ private:
 
 public:
     // Attributes
-    //Imu imu = Imu();
+    Imu imu = Imu();
     Sonar sonar_1 = Sonar(TRIGGER_FRONT_SONAR, ECHO_FRONT_SONAR);
     Sonar sonar_2 = Sonar(TRIGGER_LEFT_SONAR, ECHO_LEFT_SONAR);
     Sonar sonar_3 = Sonar(TRIGGER_RIGHT_SONAR, ECHO_RIGHT_SONAR);

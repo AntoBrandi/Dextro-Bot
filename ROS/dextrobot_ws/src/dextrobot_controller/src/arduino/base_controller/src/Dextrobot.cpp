@@ -13,8 +13,6 @@ Dextrobot::Dextrobot(/* args */)
     // Enable the CNC shield
     pinMode(ENABLE_SHIELD, OUTPUT);
     digitalWrite(ENABLE_SHIELD, LOW);
-
-    //imu.calibrate();
 }
 
 Dextrobot::~Dextrobot()
@@ -166,7 +164,7 @@ void Dextrobot::stop(){
 
 // Update the reading of each sensor
 void Dextrobot::sense(){
-    //imu.sense();
+    imu.sense();
     sonar_1.sense();
     sonar_2.sense();
     sonar_3.sense();

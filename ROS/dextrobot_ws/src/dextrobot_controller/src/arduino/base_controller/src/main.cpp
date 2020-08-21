@@ -14,15 +14,17 @@
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/Range.h>
 #include <std_msgs/String.h>
 
 // Topic Names
 // PUBLISH TOPIC
 #define ROS_TOPIC_IMU "imu_raw"
-#define ROS_TOPIC_SONAR_FRONT "range_front_msg"
-#define ROS_TOPIC_range_left_msg "range_left_msg"
-#define ROS_TOPIC_range_right_msg "range_right_msg"
-#define ROS_TOPIC_range_back_msg "range_back_msg"
+#define ROS_TOPIC_RANGE_FRONT "range_front"
+#define ROS_TOPIC_RANGE_LEFT "range_left"
+#define ROS_TOPIC_RANGE_RIGHT "range_right"
+#define ROS_TOPIC_RANGE_BACK "range_back"
+#define ROS_TOPIC_DEBUG "debug"
 // SUBSCRIBE TOPIC
 #define ROS_TOPIC_CMD_VEL "cmd_vel"
 
@@ -37,17 +39,19 @@ sensor_msgs::Range range_front_msg;
 sensor_msgs::Range range_left_msg;
 sensor_msgs::Range range_right_msg;
 sensor_msgs::Range range_back_msg;
-ros::Publisher pub_range_front(ROS_TOPIC_SONAR_FRONT, &range_front_msg);
-ros::Publisher pub_range_left(ROS_TOPIC_range_left_msg, &range_left_msg);
-ros::Publisher pub_range_right(ROS_TOPIC_range_right_msg, &range_right_msg);
-ros::Publisher pub_range_back(ROS_TOPIC_range_back_msg, &range_back_msg);
+std_msgs::String debug_msg;
+ros::Publisher pub_range_front(ROS_TOPIC_RANGE_FRONT, &range_front_msg);
+ros::Publisher pub_range_left(ROS_TOPIC_RANGE_LEFT, &range_left_msg);
+ros::Publisher pub_range_right(ROS_TOPIC_RANGE_RIGHT, &range_right_msg);
+ros::Publisher pub_range_back(ROS_TOPIC_RANGE_BACK, &range_back_msg);
 ros::Publisher pub_imu(ROS_TOPIC_IMU, &imu_msg);
+ros::Publisher pub_debug(ROS_TOPIC_DEBUG, &debug_msg);
 
 // Create an instance of the Robot with its methods
 Dextrobot robot;
 
 // Record the last time a publish operation happened
-long publisher_timer = 0;
+unsigned long publisher_timer;
 
 // Keep track of the next action that each stepper should take
 int action = 0;
@@ -117,9 +121,6 @@ ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel(ROS_TOPIC_CMD_VEL, onCmdVelMsg
 
 
 void setup() {
-  Serial.begin(57600);
-  Serial.println("first step");
-
   // cerate and initialize a ROS node on this Arduino controller
   nh.initNode();
   // Register the Subscribers
@@ -130,10 +131,24 @@ void setup() {
   nh.advertise(pub_range_right);
   nh.advertise(pub_range_back);
   nh.advertise(pub_imu);
+  nh.advertise(pub_debug);
 
   // Init the robot and it's stepper motor
-  Serial.println("robot initialization");
   robot = Dextrobot();
+
+  // Init the accelerometer
+  while(!robot.imu.mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
+  {
+      delay(500);
+  }
+  // Calibrate gyroscope. The calibration must be at rest.
+  // If you don't want calibrate, comment this line.
+  robot.imu.mpu.calibrateGyro(); 
+  // Set threshold sensivty. Default 3.
+  // If you don't want use threshold, comment this line or set 0.
+  robot.imu.mpu.setThreshold(1);
+
+  publisher_timer = millis();
 }
 
 void loop() { 
@@ -174,13 +189,13 @@ void loop() {
   // read the actual status of the sensors
   robot.sense();
 
-  if (millis() > publisher_timer) {
+  if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
     range_front_msg = robot.sonar_1.composeRangeMessage(nh.now());
     range_left_msg = robot.sonar_2.composeRangeMessage(nh.now());
     range_right_msg = robot.sonar_3.composeRangeMessage(nh.now());
     range_back_msg = robot.sonar_4.composeRangeMessage(nh.now());
-    //imu_msg = robot.imu.composeImuMessage(nh.now());
+    imu_msg = robot.imu.composeImuMessage(nh.now());
 
     // publish the messages
     pub_range_front.publish(&range_front_msg);

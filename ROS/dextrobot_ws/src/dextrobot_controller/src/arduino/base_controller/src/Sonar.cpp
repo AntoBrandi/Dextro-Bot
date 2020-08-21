@@ -11,6 +11,7 @@
 
 Sonar::Sonar(uint8_t triggerPin, uint8_t echoPin) : triggerPin(triggerPin), echoPin(echoPin)
 {
+    lastScan = millis();
 }
 
 Sonar::~Sonar()
@@ -18,11 +19,9 @@ Sonar::~Sonar()
 }
 
 void Sonar::sense(){
-    if (millis() > lastScan){
+    if (millis() >= lastScan){
         // Read From sensors
-        distance = sonar.ping_cm(); 
-        // filter the reading
-        distance = KFilter.updateEstimate(distance);
+        distance = sonar.ping_cm();
 
         // update the last scan time 
         lastScan = millis() + PING_INTERVAL;
