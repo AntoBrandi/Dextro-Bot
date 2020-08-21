@@ -5,7 +5,7 @@
 	<arg name="debug" default="false"/>
 	<arg name="launch_rviz" default="false"/>
 	<arg name="world" default="$(find dextrobot_gazebo)/src/worlds/summit_xl.world"/>
-	<!-- <arg name="file_rviz" default="summitxl_a"/> -->
+	<!-- <arg name="file_rviz" default="dextrobot_a"/> -->
 	<arg name="file_rviz" default="flex_move_base"/>
 	<!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">

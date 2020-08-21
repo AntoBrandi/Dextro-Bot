@@ -1,0 +1,31 @@
+topics:
+- name    : pad
+  topic   : pad_teleop/cmd_vel
+  timeout : 0.15
+  priority: 100
+
+- name    : move_base
+  topic   : move_base/cmd_vel
+  timeout : 0.15
+  priority: 50
+
+- name    : move
+  topic   : move/cmd_vel
+  timeout : 0.15
+  priority: 50
+
+- name    : docker
+  topic   : docker/cmd_vel
+  timeout : 0.15
+  priority: 50
+
+- name    : external
+  topic   : cmd_vel
+  timeout : 0.15
+  priority: 1
+
+locks:
+- name    : e_stop
+  topic   : robotnik_base_hw/emergency_stop
+  timeout : 0.0    
+  priority: 255

@@ -30,9 +30,9 @@
 		</node>
 
 		<!-- Spawner model into gazebo -->
-		<node name="urdf_spawner_summit_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-x $(arg x_init_pose) -y $(arg y_init_pose) -z $(arg z_init_pose) -urdf -param robot_description -model $(arg id_robot)" />
+		<node name="urdf_spawner_dextrobot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-x $(arg x_init_pose) -y $(arg y_init_pose) -z $(arg z_init_pose) -urdf -param robot_description -model $(arg id_robot)" />
 
-		<!-- start summit_xl_control nodes -->
+		<!-- start dextrobot_control nodes -->
 		<include file="$(find dextrobot_fake_control)/src/launch/dextrobot_fake_control.launch">
 			<arg name="prefix" value="$(arg prefix)"/>
 			<arg name="sim" value="true"/>
@@ -48,8 +48,8 @@
 			<param name="destination_frame" value="$(arg prefix)base_link"/>
 			<param name="scan_destination_topic" value="scan"/>
 			<param name="laserscan_topics" 
-               value ="/summit_xl_a/front_laser/scan
-                       /summit_xl_a/rear_laser/scan" />
+               value ="/dextrobot_a/front_laser/scan
+                       /dextrobot_a/rear_laser/scan" />
 		</node>
 
 		<!-- robot_localization nodes, publishes transformation world->odom->base_footprint -->
