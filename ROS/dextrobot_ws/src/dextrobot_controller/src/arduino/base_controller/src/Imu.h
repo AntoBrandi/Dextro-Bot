@@ -31,6 +31,7 @@ class Imu
         void sense();
         std_msgs::String composeStringMessage();
         sensor_msgs::Imu composeImuMessage(ros::Time now);
+        void calibrate();
 };
 
 

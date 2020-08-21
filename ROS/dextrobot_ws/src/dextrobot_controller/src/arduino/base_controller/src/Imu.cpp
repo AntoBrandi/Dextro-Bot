@@ -2,19 +2,6 @@
 
 Imu::Imu(/* args */)
 {
-    while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
-    {
-        Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
-        delay(500);
-    }
-
-    // Calibrate gyroscope. The calibration must be at rest.
-    // If you don't want calibrate, comment this line.
-    mpu.calibrateGyro();
-    
-    // Set threshold sensivty. Default 3.
-    // If you don't want use threshold, comment this line or set 0.
-    mpu.setThreshold(1);
 }
 
 Imu::~Imu()
@@ -104,5 +91,24 @@ sensor_msgs::Imu Imu::composeImuMessage(ros::Time now){
     imu_msg.orientation = quaternion;
 
     return imu_msg;
+}
+
+
+void Imu::calibrate(){
+
+    while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
+    {
+        Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
+        delay(500);
+    }
+    Serial.println("MPU6050 sensor found!");
+
+    // Calibrate gyroscope. The calibration must be at rest.
+    // If you don't want calibrate, comment this line.
+    mpu.calibrateGyro();
+    
+    // Set threshold sensivty. Default 3.
+    // If you don't want use threshold, comment this line or set 0.
+    mpu.setThreshold(1);
 }
 

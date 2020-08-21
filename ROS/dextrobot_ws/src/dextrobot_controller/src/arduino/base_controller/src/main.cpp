@@ -117,6 +117,9 @@ ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel(ROS_TOPIC_CMD_VEL, onCmdVelMsg
 
 
 void setup() {
+  Serial.begin(57600);
+  Serial.println("first step");
+
   // cerate and initialize a ROS node on this Arduino controller
   nh.initNode();
   // Register the Subscribers
@@ -129,6 +132,7 @@ void setup() {
   nh.advertise(pub_imu);
 
   // Init the robot and it's stepper motor
+  Serial.println("robot initialization");
   robot = Dextrobot();
 }
 
@@ -176,7 +180,7 @@ void loop() {
     range_left_msg = robot.sonar_2.composeRangeMessage(nh.now());
     range_right_msg = robot.sonar_3.composeRangeMessage(nh.now());
     range_back_msg = robot.sonar_4.composeRangeMessage(nh.now());
-    imu_msg = robot.imu.composeImuMessage(nh.now());
+    //imu_msg = robot.imu.composeImuMessage(nh.now());
 
     // publish the messages
     pub_range_front.publish(&range_front_msg);
