@@ -4,19 +4,20 @@
 
 // Define the PIN number of the Arduino board connected with the driver motors
 // MOTOR 1
-#define dirPin_1 2
-#define stepPin_1 3
+#define dirPin_1 5
+#define stepPin_1 2
 // MOTOR 2
-#define dirPin_2 4
-#define stepPin_2 5
+#define dirPin_2 6
+#define stepPin_2 3
 // MOTOR 3
-#define dirPin_3 6
-#define stepPin_3 7
+#define dirPin_3 7
+#define stepPin_3 4
 // MOTOR 4
-#define dirPin_4 8
-#define stepPin_4 9
+#define dirPin_4 13
+#define stepPin_4 12
 // AccelStepper parameter
 #define motorInterfaceType 1
+#define enable_shield 8
 
 // Stepper Motor control parameters
 // Max speed of the steppers in steps per second
@@ -58,6 +59,9 @@ ros::NodeHandle nh;
 ros::Subscriber<std_msgs::String> sub("/stepper_trigger", trigger );
 
 void setup() {
+  // Enable the CNC shield
+    pinMode(enable_shield, OUTPUT);
+    digitalWrite(enable_shield, LOW);
   
   // Set the maximum speed 
   motor_1.setMaxSpeed(MAX_SPEED);

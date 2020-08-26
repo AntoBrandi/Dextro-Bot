@@ -11,26 +11,15 @@
 
 Sonar::Sonar(uint8_t triggerPin, uint8_t echoPin) : triggerPin(triggerPin), echoPin(echoPin)
 {
-    lastScan = millis();
 }
 
 Sonar::~Sonar()
 {
 }
 
-void Sonar::sense(){
-    if (millis() >= lastScan){
-        // Read From sensors
-        distance = sonar.ping_cm();
-
-        // update the last scan time 
-        lastScan = millis() + PING_INTERVAL;
-    }   
-}
-
 
 // Compose the ROS message with the sensor data
-sensor_msgs::Range Sonar::composeRangeMessage(ros::Time now){
+sensor_msgs::Range Sonar::composeRangeMessage(ros::Time now, uint8_t distance){
     sensor_msgs::Range range_msg;
     // compose the header
     range_msg.radiation_type = sensor_msgs::Range::ULTRASOUND;
@@ -45,4 +34,15 @@ sensor_msgs::Range Sonar::composeRangeMessage(ros::Time now){
 
 
     return range_msg;
+}
+
+// Compose the ROS message with the sensor data in a string
+std_msgs::String Sonar::composeStringMessage(uint8_t distance){
+    std_msgs::String string_msg;
+    String data = String((float)distance/100);
+    int length = data.length();
+    char data_final[length+1];
+    data.toCharArray(data_final, length+1);
+    string_msg.data = data_final;
+    return string_msg;
 }

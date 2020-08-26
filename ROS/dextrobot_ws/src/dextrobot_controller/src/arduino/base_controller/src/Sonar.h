@@ -7,6 +7,7 @@
 */
 #include <NewPing.h>
 #include <sensor_msgs/Range.h>
+#include <std_msgs/String.h>
 #include <ros.h>
 
 #ifndef Sonar_h
@@ -27,17 +28,14 @@ class Sonar
     private:
         uint8_t triggerPin;
         uint8_t echoPin;
-        unsigned long lastScan;
-        NewPing sonar = NewPing(triggerPin, echoPin, MAX_DISTANCE);
-
-        // readings 
-        uint8_t distance = 0;
+        
 
     public:
+        NewPing sonar = NewPing(triggerPin, echoPin, MAX_DISTANCE);
         Sonar(uint8_t triggerPin, uint8_t echoPin);
         ~Sonar();
-        void sense();
-        sensor_msgs::Range composeRangeMessage(ros::Time now);
+        std_msgs::String composeStringMessage(uint8_t distance);
+        sensor_msgs::Range composeRangeMessage(ros::Time now, uint8_t distance);
 };
 
 

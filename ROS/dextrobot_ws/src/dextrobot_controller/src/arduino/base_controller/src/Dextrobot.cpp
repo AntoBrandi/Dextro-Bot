@@ -25,11 +25,6 @@ void Dextrobot::goForward(float velocity){
   motor_2.setSpeed(-velocity);
   motor_3.setSpeed(velocity);
   motor_4.setSpeed(-velocity);
-  // Step the motor with a constant speed as set by setSpeed():
-  motor_1.runSpeed();
-  motor_2.runSpeed();
-  motor_3.runSpeed();
-  motor_4.runSpeed();
 }
 
 void Dextrobot::goBackward(float velocity){
@@ -38,11 +33,6 @@ void Dextrobot::goBackward(float velocity){
     motor_2.setSpeed(velocity);
     motor_3.setSpeed(-velocity);
     motor_4.setSpeed(velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goRight(float velocity){
@@ -51,11 +41,6 @@ void Dextrobot::goRight(float velocity){
     motor_2.setSpeed(velocity);
     motor_3.setSpeed(-velocity);
     motor_4.setSpeed(-velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goLeft(float velocity){
@@ -64,11 +49,6 @@ void Dextrobot::goLeft(float velocity){
     motor_2.setSpeed(-velocity);
     motor_3.setSpeed(velocity);
     motor_4.setSpeed(velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goForwardRight(float velocity){
@@ -77,11 +57,6 @@ void Dextrobot::goForwardRight(float velocity){
     motor_2.setSpeed(0);
     motor_3.setSpeed(0);
     motor_4.setSpeed(-velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goForwardLeft(float velocity){
@@ -90,11 +65,6 @@ void Dextrobot::goForwardLeft(float velocity){
     motor_2.setSpeed(-velocity);
     motor_3.setSpeed(velocity);
     motor_4.setSpeed(0);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goBackwardRight(float velocity){
@@ -103,11 +73,6 @@ void Dextrobot::goBackwardRight(float velocity){
     motor_2.setSpeed(velocity);
     motor_3.setSpeed(-velocity);
     motor_4.setSpeed(0);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::goBackwardLeft(float velocity){
@@ -116,11 +81,6 @@ void Dextrobot::goBackwardLeft(float velocity){
     motor_2.setSpeed(0);
     motor_3.setSpeed(0);
     motor_4.setSpeed(velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::rotateClockwise(float velocity){
@@ -129,11 +89,6 @@ void Dextrobot::rotateClockwise(float velocity){
     motor_2.setSpeed(velocity);
     motor_3.setSpeed(velocity);
     motor_4.setSpeed(velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::rotateCounterClockwise(float velocity){
@@ -142,11 +97,6 @@ void Dextrobot::rotateCounterClockwise(float velocity){
     motor_2.setSpeed(-velocity);
     motor_3.setSpeed(-velocity);
     motor_4.setSpeed(-velocity);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
 }
 
 void Dextrobot::stop(){
@@ -154,19 +104,18 @@ void Dextrobot::stop(){
     motor_1.setSpeed(0);
     motor_2.setSpeed(0);
     motor_3.setSpeed(0);
-    motor_4.setSpeed(0);
-    // Step the motor with a constant speed as set by setSpeed():
-    motor_1.runSpeed();
-    motor_2.runSpeed();
-    motor_3.runSpeed();
-    motor_4.runSpeed();
+    motor_4.setSpeed(0);    
 }
 
 // Update the reading of each sensor
 void Dextrobot::sense(){
     imu.sense();
-    sonar_1.sense();
-    sonar_2.sense();
-    sonar_3.sense();
-    sonar_4.sense();
+}
+
+// execute the stepper mouvement
+void Dextrobot::run(){
+    motor_1.runSpeed();
+    motor_2.runSpeed();
+    motor_3.runSpeed();
+    motor_4.runSpeed();
 }

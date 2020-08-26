@@ -23,10 +23,10 @@ class Stepper
     private:
         int dirPin;
         int stepPin;
-        int speed; // steps per second
         AccelStepper motor;
         float convertToStepsPerSecond(float ms);
     public:
+        int speed; // steps per second
         Stepper(int dir, int step);
         ~Stepper();   
         void setSpeed(float speed);

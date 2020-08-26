@@ -46,7 +46,6 @@ std_msgs::String Imu::composeStringMessage(){
     std_msgs::String imu_msg;
 
     String data = String(AcX) + "," + String(AcY) + "," + String(AcZ) + "," + String(toRadians(roll)) + ","+ String(toRadians(pitch)) + "," + String(toRadians(yaw));
-
     int length = data.length();
     char data_final[length+1];
     data.toCharArray(data_final, length+1);

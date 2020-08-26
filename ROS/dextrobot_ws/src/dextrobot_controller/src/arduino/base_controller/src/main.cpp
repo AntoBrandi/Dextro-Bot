@@ -14,7 +14,6 @@
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3.h>
-#include <sensor_msgs/Range.h>
 #include <std_msgs/String.h>
 
 // Topic Names
@@ -31,15 +30,16 @@
 // ROS message publish frequency
 // TODO: tune the frequency
 #define PUBLISH_DELAY 100 // 10Hz
+#define SONAR_DELAY 33
 
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
 // Publishers
-sensor_msgs::Imu imu_msg;
-sensor_msgs::Range range_front_msg;
-sensor_msgs::Range range_left_msg;
-sensor_msgs::Range range_right_msg;
-sensor_msgs::Range range_back_msg;
+std_msgs::String imu_msg;
+std_msgs::String range_front_msg;
+std_msgs::String range_left_msg;
+std_msgs::String range_right_msg;
+std_msgs::String range_back_msg;
 std_msgs::String debug_msg;
 ros::Publisher pub_range_front(ROS_TOPIC_RANGE_FRONT, &range_front_msg);
 ros::Publisher pub_range_left(ROS_TOPIC_RANGE_LEFT, &range_left_msg);
@@ -54,10 +54,11 @@ Dextrobot robot;
 // Record the last time a publish operation happened
 unsigned long publisher_timer;
 
-// Keep track of the next action that each stepper should take
-int action = 0;
-float velocity = 0;
+// Record the last time the sonar sensor have been triggered
+unsigned long sonar_timer;
 
+// sonars readings
+uint8_t distances[SONAR_NUM]={0,0,0,0};
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Twist& msg){
@@ -71,48 +72,65 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 
   // Move the robot according to the received velocity message
   if(x_lin>0){
-    velocity = x_lin;
     if(y_lin>0){
       // go forward right
-      action = 3;
+      robot.goForwardRight(x_lin);
     } else if (y_lin<0){
       // go forward left
-      action = 2;
+      robot.goForwardLeft(x_lin);
     } else{
       // go forward
-      action = 1;
+      robot.goForward(x_lin);
     }
   }
 
   if(x_lin<0){
-    velocity = x_lin;
     if(y_lin>0){
       // go backward right
-      action = 6;
+      robot.goBackwardRight(x_lin);
     } else if (y_lin<0){
       // go backward left
-      action = 5;
+      robot.goBackwardLeft(x_lin);
     } else{
       // go backward
-      action = 4;
+      robot.goBackward(x_lin);
     }
   }
 
   if(z_ang>0){
-    velocity = z_ang;
     // rotate clockwise
-    action = 7;
+    robot.rotateClockwise(z_ang);
   } else if(z_ang<0){
-    velocity = z_ang;
     // rotate counterclockwise
-    action = 8;
+    robot.rotateCounterClockwise(z_ang);
   }
 
   if(x_lin==0 && y_lin==0 && z_ang==0){
-    velocity = 0;
     // stop the robot
-    action = 0;
+    robot.stop();
   }
+
+  // debug message
+  String dbg = "Motors speeds:/n1: "+String(robot.motor_1.speed)+"/n2: "+String(robot.motor_2.speed)+"/n3: "+String(robot.motor_3.speed)+"/n4: "+String(robot.motor_4.speed);
+  int length = dbg.length();
+  char data_final[length+1];
+  dbg.toCharArray(data_final, length+1);
+  debug_msg.data = data_final;
+  pub_debug.publish(&debug_msg);
+  
+}
+
+void echoSonar1Check(){
+  distances[0] = robot.sonar_1.sonar.ping_result / US_ROUNDTRIP_CM;
+}
+void echoSonar2Check(){
+  distances[1] = robot.sonar_2.sonar.ping_result / US_ROUNDTRIP_CM;
+}
+void echoSonar3Check(){
+  distances[2] = robot.sonar_3.sonar.ping_result / US_ROUNDTRIP_CM;
+}
+void echoSonar4Check(){
+  distances[3] = robot.sonar_4.sonar.ping_result / US_ROUNDTRIP_CM;
 }
 
 
@@ -150,53 +168,39 @@ void setup() {
   robot.imu.mpu.setThreshold(1);
 
   publisher_timer = millis();
+  sonar_timer = millis();
 }
 
 void loop() { 
   // move the stepper motor if needed
-  switch (action)
-  {
-    case 0:
-      robot.stop();
-      break;
-    case 1:
-      robot.goForward(velocity);
-      break;
-    case 2:
-      robot.goForwardLeft(velocity);
-      break;
-    case 3:
-      robot.goForwardRight(velocity);
-      break;
-    case 4:
-      robot.goBackward(velocity);
-      break;
-    case 5:
-      robot.goBackwardLeft(velocity);
-      break;
-    case 6:
-      robot.goBackwardRight(velocity);
-      break;
-    case 7:
-      robot.rotateClockwise(velocity);
-      break;
-    case 8:
-      robot.rotateCounterClockwise(velocity);
-      break; 
-    default:
-      robot.stop();
-      break;
-  }
+  robot.run();
+
   // read the actual status of the sensors
   robot.sense();
+  if(millis() >= sonar_timer){
+    robot.sonar_1.sonar.timer_stop(); 
+    robot.sonar_1.sonar.ping_timer(echoSonar1Check);
 
+    robot.sonar_2.sonar.timer_stop(); 
+    robot.sonar_2.sonar.ping_timer(echoSonar2Check);
+
+    robot.sonar_3.sonar.timer_stop(); 
+    robot.sonar_3.sonar.ping_timer(echoSonar3Check);
+
+    robot.sonar_4.sonar.timer_stop(); 
+    robot.sonar_4.sonar.ping_timer(echoSonar4Check);
+
+    sonar_timer = millis() + SONAR_DELAY;
+  }
+
+  // publish the sensor readings to ROS
   if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
-    range_front_msg = robot.sonar_1.composeRangeMessage(nh.now());
-    range_left_msg = robot.sonar_2.composeRangeMessage(nh.now());
-    range_right_msg = robot.sonar_3.composeRangeMessage(nh.now());
-    range_back_msg = robot.sonar_4.composeRangeMessage(nh.now());
-    imu_msg = robot.imu.composeImuMessage(nh.now());
+    range_front_msg = robot.sonar_1.composeStringMessage(distances[0]);
+    range_left_msg = robot.sonar_2.composeStringMessage(distances[1]);
+    range_right_msg = robot.sonar_3.composeStringMessage(distances[2]);
+    range_back_msg = robot.sonar_4.composeStringMessage(distances[3]);
+    imu_msg = robot.imu.composeStringMessage();
 
     // publish the messages
     pub_range_front.publish(&range_front_msg);
@@ -212,3 +216,5 @@ void loop() {
   // Keep ROS Node Up & Running
   nh.spinOnce();
 }
+
+
