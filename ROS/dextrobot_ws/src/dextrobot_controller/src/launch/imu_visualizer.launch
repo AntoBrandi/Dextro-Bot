@@ -1,14 +1,11 @@
 <launch>
-    <!-- The controller is an arduino uno or mega -->
-    <arg name="limited_controller" default="false"/>
-
     <!-- Launch the ros interface with Arduino -->
     <node pkg="rosserial_python" type="serial_node.py" name="imu_watcher" output="screen">
         <param name="port" value="/dev/ttyACM0"/>
     </node>
 
     <!-- Launch the IMU message converter from string to sensor_msgs/Imu -->
-    <node if="$(arg limited_controller)" pkg="dextrobot_controller" type="imu_raw_subscriber.py" name="imu_converter" respawn="true" output="screen"/>
+    <node pkg="dextrobot_controller" type="imu_raw_subscriber.py" name="imu_converter" respawn="true" output="screen"/>
 
     <!-- Launch RVIZ for the visualization of the IMU data -->
     <node type="rviz" name="rviz" pkg="rviz" args="-d $(find dextrobot_controller)/src/rviz/imu_visualizer.rviz"/>

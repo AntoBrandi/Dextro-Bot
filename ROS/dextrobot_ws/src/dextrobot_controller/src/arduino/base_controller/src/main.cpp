@@ -19,10 +19,10 @@
 // Topic Names
 // PUBLISH TOPIC
 #define ROS_TOPIC_IMU "imu_raw"
-#define ROS_TOPIC_RANGE_FRONT "range_front"
-#define ROS_TOPIC_RANGE_LEFT "range_left"
-#define ROS_TOPIC_RANGE_RIGHT "range_right"
-#define ROS_TOPIC_RANGE_BACK "range_back"
+#define ROS_TOPIC_RANGE_FRONT "range_front_raw"
+#define ROS_TOPIC_RANGE_LEFT "range_left_raw"
+#define ROS_TOPIC_RANGE_RIGHT "range_right_raw"
+#define ROS_TOPIC_RANGE_BACK "range_back_raw"
 #define ROS_TOPIC_DEBUG "debug"
 // SUBSCRIBE TOPIC
 #define ROS_TOPIC_CMD_VEL "cmd_vel"
