@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import Float32
 from sensor_msgs.msg import Range
 import math
 
@@ -20,7 +20,7 @@ def composeRangeMessage(distance):
     sensor_range.field_of_view = 0.26
     sensor_range.min_range = 0
     sensor_range.max_range = 2
-    sensor_range.range = (float)distance/100
+    sensor_range.range = distance/100
 
     return sensor_range
 
@@ -70,13 +70,13 @@ def configure():
     global pubFront, pubLeft, pubRight, pubBack
     rospy.init_node('range_cleaner', anonymous=True)
 
-    rospy.Subscriber("range_front_raw", String, callbackFront)
+    rospy.Subscriber("range_front_raw", Float32, callbackFront)
     pubFront = rospy.Publisher("range_front", Range, queue_size=10)
-    rospy.Subscriber("range_left_raw", String, callbackLeft)
+    rospy.Subscriber("range_left_raw", Float32, callbackLeft)
     pubLeft = rospy.Publisher("range_left", Range, queue_size=10)
-    rospy.Subscriber("range_right_raw", String, callbackRight)
+    rospy.Subscriber("range_right_raw", Float32, callbackRight)
     pubRight = rospy.Publisher("range_right", Range, queue_size=10)
-    rospy.Subscriber("range_back_raw", String, callbackBack)
+    rospy.Subscriber("range_back_raw", Float32, callbackBack)
     pubBack = rospy.Publisher("range_back", Range, queue_size=10)
 
     # simply keeps python from exiting until this node is stopped
