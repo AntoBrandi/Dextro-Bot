@@ -14,7 +14,4 @@
     <!-- Launch the Twist message converter from Twist to Vector3 -->
     <node pkg="dextrobot_controller" type="cmd_vel_converter.py" name="cmd_vel_converter" respawn="true" output="screen"/>
 
-    <!-- Launch RVIZ for the visualization of the IMU data -->
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find dextrobot_controller)/src/rviz/dextrobot_visualizer.rviz"/>
-
 </launch>

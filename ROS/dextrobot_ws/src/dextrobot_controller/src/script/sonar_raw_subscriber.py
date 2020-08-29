@@ -14,7 +14,6 @@ def composeRangeMessage(distance):
     sensor_range = Range()
 
     # compose the message
-    sensor_range.header.frame_id = "sonar_ranger"
     sensor_range.header.stamp = rospy.Time.now()
     sensor_range.radiation_type = Range.ULTRASOUND
     sensor_range.field_of_view = 0.26
@@ -41,6 +40,7 @@ def callbackLeft(data):
 
     # compose the message
     sensor_range_left = composeRangeMessage(distance)
+    sensor_range.header.frame_id = "dextrobot_left_sonar"
 
     # publish the composed message
     pubLeft.publish(sensor_range_left)
