@@ -6,7 +6,7 @@
 #define Imu_h
 
 #define FRAME_ID "imu_frame"
-#define READ_INTERVAL 100
+#define READ_INTERVAL 50
 
 class Imu
 {

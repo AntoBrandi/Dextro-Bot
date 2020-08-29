@@ -5,7 +5,7 @@ Imu::Imu(/* args */)
     /* initialize random seed: */
     srand (time(NULL));
     /* generate secret number between 1 and 10: */
-    int offset = rand() % 100 + 1;
+    int offset = rand() % 50 + 1;
     lastRead = millis() + offset;
 }
 
