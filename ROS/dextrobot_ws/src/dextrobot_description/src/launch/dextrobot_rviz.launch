@@ -15,10 +15,10 @@
     <param name="use_gui" value="TRUE"/>
   </node>
 
-  <!-- Combine joint values -->
+  <!-- Publish the TF based on the robot URDF -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
 
-  <!-- Show in Rviz   -->
+  <!-- Show in Rviz -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)"/> 
   
 </launch>

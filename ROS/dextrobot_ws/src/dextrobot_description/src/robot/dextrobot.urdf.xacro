@@ -38,32 +38,14 @@
 	<xacro:property name="wheel_4_offset_z" value="0" />
 
 	<!-- IMU parameters -->
-	<xacro:property name="imu_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="imu_offset_y" value="0.0235" />
-	<xacro:property name="imu_offset_z" value="0.0" />
+	<xacro:property name="imu_offset_x" value="0" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="imu_offset_y" value="0" />
+	<xacro:property name="imu_offset_z" value="0.05" />
 
 	<!-- Camera parameters -->
 	<xacro:property name="camera_offset_x" value="-0.015" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
 	<xacro:property name="camera_offset_y" value="0.08" />
 	<xacro:property name="camera_offset_z" value="0.07" />
-
-	<!-- Sonar parameters -->
-	<!-- front sonar -->
-	<xacro:property name="front_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="front_sonar_offset_y" value="0.0235" />
-	<xacro:property name="front_sonar_offset_z" value="0.0" />
-	<!-- left sonar -->
-	<xacro:property name="left_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="left_sonar_offset_y" value="0.0235" />
-	<xacro:property name="left_sonar_offset_z" value="0.0" />
-	<!-- right sonar -->
-	<xacro:property name="right_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="right_sonar_offset_y" value="0.0235" />
-	<xacro:property name="right_sonar_offset_z" value="0.0" />
-	<!-- back sonar -->
-	<xacro:property name="back_sonar_offset_x" value="0.0229" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="back_sonar_offset_y" value="0.0235" />
-	<xacro:property name="back_sonar_offset_z" value="0.0" />
 
 	<!-- Flag to select the high or low quality model -->
 	<xacro:property name="hq" value="true" />
@@ -79,7 +61,7 @@
 
 		<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
-		<!-- Summit XL base -->
+		<!-- Dextrobot base -->
 		<xacro:dextrobot_base prefix="$(arg prefix)" publish_bf="true" hq="${hq}" />
 
 		<xacro:omni_wheel prefix="$(arg prefix)front_left" parent="$(arg prefix)base_link" reflect="false" hq="${hq}">
@@ -100,7 +82,7 @@
 
         <!-- IMU -->
 		<xacro:sensor_imu_hector prefix="$(arg prefix)imu" parent="$(arg prefix)base_link">
-			<origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="0 0 0"/>
+			<origin xyz="${imu_offset_x} ${imu_offset_y} ${imu_offset_z}" rpy="0 0 ${PI/2}"/>
 		</xacro:sensor_imu_hector>
 
 	    <!-- RGBD -->
