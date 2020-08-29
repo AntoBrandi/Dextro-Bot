@@ -85,6 +85,7 @@ public:
 
     // sensor functions
     void sense();
+    void run();
 };
 
 

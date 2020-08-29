@@ -54,11 +54,6 @@ Dextrobot robot;
 // Record the last time a publish operation happened
 unsigned long publisher_timer;
 
-// Keep track of the next action that each stepper should take
-int action = 0;
-float velocity = 0;
-
-
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Twist& msg){
   geometry_msgs::Vector3 linear = msg.linear;
@@ -71,47 +66,42 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 
   // Move the robot according to the received velocity message
   if(x_lin>0){
-    velocity = x_lin;
     if(y_lin>0){
       // go forward right
-      action = 3;
+      robot.goForwardRight(x_lin);
     } else if (y_lin<0){
       // go forward left
-      action = 2;
+      robot.goForwardLeft(x_lin);
     } else{
       // go forward
-      action = 1;
+      robot.goForward(x_lin);
     }
   }
 
   if(x_lin<0){
-    velocity = x_lin;
     if(y_lin>0){
       // go backward right
-      action = 6;
+      robot.goBackwardRight(x_lin);
     } else if (y_lin<0){
       // go backward left
-      action = 5;
+      robot.goBackwardLeft(x_lin);
     } else{
       // go backward
-      action = 4;
+      robot.goBackward(x_lin);
     }
   }
 
   if(z_ang>0){
-    velocity = z_ang;
     // rotate clockwise
-    action = 7;
+    robot.rotateClockwise(z_ang);
   } else if(z_ang<0){
-    velocity = z_ang;
     // rotate counterclockwise
-    action = 8;
+    robot.rotateCounterClockwise(z_ang);
   }
 
   if(x_lin==0 && y_lin==0 && z_ang==0){
-    velocity = 0;
     // stop the robot
-    action = 0;
+    robot.stop();
   }
 }
 
@@ -154,39 +144,8 @@ void setup() {
 
 void loop() { 
   // move the stepper motor if needed
-  switch (action)
-  {
-    case 0:
-      robot.stop();
-      break;
-    case 1:
-      robot.goForward(velocity);
-      break;
-    case 2:
-      robot.goForwardLeft(velocity);
-      break;
-    case 3:
-      robot.goForwardRight(velocity);
-      break;
-    case 4:
-      robot.goBackward(velocity);
-      break;
-    case 5:
-      robot.goBackwardLeft(velocity);
-      break;
-    case 6:
-      robot.goBackwardRight(velocity);
-      break;
-    case 7:
-      robot.rotateClockwise(velocity);
-      break;
-    case 8:
-      robot.rotateCounterClockwise(velocity);
-      break; 
-    default:
-      robot.stop();
-      break;
-  }
+  robot.run();
+
   // read the actual status of the sensors
   robot.sense();
 
