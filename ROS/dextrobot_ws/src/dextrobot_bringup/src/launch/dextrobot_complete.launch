@@ -21,7 +21,7 @@
 	<arg name="amcl_and_mapserver_a" default="false"/>
 	<arg name="waypoint_global_planner" default="true"/>
 	<arg name="xacro_robot_a" default="dextrobot.urdf.xacro"/>
-  <arg name="move_base_pkg" default="mbf_costmap_nav"/>
+  	<arg name="move_base_pkg" default="mbf_costmap_nav"/>
 	
 	<!-- arguments robot b -->
 	<arg name="launch_robot_b" default="false"/>
@@ -50,7 +50,7 @@
 		<arg name="gazebo_world" value="$(arg gazebo_world)"/>
 		<arg name="ros_planar_move_plugin" value="$(arg ros_planar_move_plugin)"/>
 		<arg name="waypoint_global_planner" value="$(arg waypoint_global_planner)"/>
-    <arg name="move_base_pkg" value="$(arg move_base_pkg)"/>
+    	<arg name="move_base_pkg" value="$(arg move_base_pkg)"/>
 		<!-- robot_a args -->
 		<arg name="launch_robot_a" value="$(arg launch_robot_a)"/>
 		<arg name="map_file_a" value="$(arg map_file_a)"/>

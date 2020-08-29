@@ -33,7 +33,7 @@
 		<node name="urdf_spawner_dextrobot_model" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-x $(arg x_init_pose) -y $(arg y_init_pose) -z $(arg z_init_pose) -urdf -param robot_description -model $(arg id_robot)" />
 
 		<!-- start dextrobot_control nodes -->
-		<include file="$(find dextrobot_fake_control)/src/launch/dextrobot_fake_control.launch">
+		<include file="$(find dextrobot_fake_controller)/src/launch/dextrobot_fake_control.launch">
 			<arg name="prefix" value="$(arg prefix)"/>
 			<arg name="sim" value="true"/>
 			<arg if="$(arg ros_planar_move_plugin)" name="kinematics" value="steel_omni"/>
