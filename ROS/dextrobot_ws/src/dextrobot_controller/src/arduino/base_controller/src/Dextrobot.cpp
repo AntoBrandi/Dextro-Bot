@@ -110,7 +110,7 @@ void Dextrobot::stop(){
 // Update the reading of each sensor
 void Dextrobot::sense(){
     imu.sense();
-    sonar_1.sense();
+    //sonar_1.sense();
     sonar_2.sense();
     sonar_3.sense();
     sonar_4.sense();

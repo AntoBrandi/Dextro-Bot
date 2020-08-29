@@ -6,6 +6,7 @@
   Copyright (c) 2020 Antonio Brandi.  All right reserved.
 */
 #include <NewPing.h>
+#include <time.h>
 
 #ifndef Sonar_h
 #define Sonar_h

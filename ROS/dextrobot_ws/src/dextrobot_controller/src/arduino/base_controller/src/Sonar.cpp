@@ -11,7 +11,11 @@
 
 Sonar::Sonar(uint8_t triggerPin, uint8_t echoPin) : triggerPin(triggerPin), echoPin(echoPin)
 {
-    lastScan = millis();
+    /* initialize random seed: */
+    srand (time(NULL));
+    /* generate secret number between 1 and 10: */
+    int offset = rand() % 100 + 1;
+    lastScan = millis()+offset;
 }
 
 Sonar::~Sonar()

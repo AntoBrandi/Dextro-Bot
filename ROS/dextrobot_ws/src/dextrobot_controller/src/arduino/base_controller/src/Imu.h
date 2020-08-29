@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <MPU6050.h>
+#include <time.h>
 
 #ifndef Imu_h
 #define Imu_h
