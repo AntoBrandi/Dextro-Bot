@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include <Dextrobot.h>
 #include <ros.h>
-#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Vector3.h>
 #include <std_msgs/String.h>
 
 // Topic Names
@@ -28,7 +28,7 @@
 
 // ROS message publish frequency
 // TODO: tune the frequency
-#define PUBLISH_DELAY 100 // 10Hz
+#define PUBLISH_DELAY 500 // 10Hz
 
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
@@ -53,12 +53,12 @@ Dextrobot robot;
 unsigned long publisher_timer;
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
-void onCmdVelMsg(const geometry_msgs::Twist& msg){
+void onCmdVelMsg(const geometry_msgs::Vector3& msg){
   // extract only useful parameters. No linear mouvement possible over z axis
   // and no rotation mouvements possible over x and y axis
-  float x_lin = msg.linear.x;
-  float y_lin = msg.linear.y;
-  float z_ang = msg.angular.z;
+  float x_lin = msg.x;
+  float y_lin = msg.y;
+  float z_ang = msg.z;
 
   // Move the robot according to the received velocity message
   if(x_lin>0){
@@ -103,7 +103,7 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
 
 // Subscribers
 // CMD_VEL 
-ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel(ROS_TOPIC_CMD_VEL, onCmdVelMsg );
+ros::Subscriber<geometry_msgs::Vector3> sub_cmd_vel(ROS_TOPIC_CMD_VEL, onCmdVelMsg );
 
 
 void setup() {
