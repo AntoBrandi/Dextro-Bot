@@ -5,6 +5,7 @@
 #define Imu_h
 
 #define FRAME_ID "imu_frame"
+#define READ_INTERVAL 50
 
 class Imu
 {
@@ -19,6 +20,8 @@ class Imu
         int roll = 0;
         float yaw = 0;
         float toRadians(float degree);
+        // time mangement
+        unsigned long lastRead;
     public:
         MPU6050 mpu;
         Imu(/* args */);

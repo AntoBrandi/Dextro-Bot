@@ -2,6 +2,7 @@
 
 Imu::Imu(/* args */)
 {
+    lastRead = millis();
 }
 
 Imu::~Imu()
@@ -15,29 +16,34 @@ float Imu::toRadians(float degree){
 
 // reads the value coming from the IMU sensor and update the class parameters
 void Imu::sense(){
-    // Read normalized values 
-    Vector normAccel = mpu.readNormalizeAccel();
-    Vector normGyro = mpu.readNormalizeGyro();
+    if(millis()>lastRead){
+        // Read normalized values 
+        Vector normAccel = mpu.readNormalizeAccel();
+        Vector normGyro = mpu.readNormalizeGyro();
 
-    // Calculate Pitch & Roll
-    pitch = -(atan2(normAccel.XAxis, sqrt(normAccel.YAxis*normAccel.YAxis + normAccel.ZAxis*normAccel.ZAxis))*180.0)/M_PI;
-    roll = (atan2(normAccel.YAxis, normAccel.ZAxis)*180.0)/M_PI;
-    
-    //Ignore the gyro if our angular velocity does not meet our threshold
-    if (normGyro.ZAxis > 1 || normGyro.ZAxis < -1) {
-        normGyro.ZAxis /= 100;
-        yaw += normGyro.ZAxis;
+        // Calculate Pitch & Roll
+        pitch = -(atan2(normAccel.XAxis, sqrt(normAccel.YAxis*normAccel.YAxis + normAccel.ZAxis*normAccel.ZAxis))*180.0)/M_PI;
+        roll = (atan2(normAccel.YAxis, normAccel.ZAxis)*180.0)/M_PI;
+        
+        //Ignore the gyro if our angular velocity does not meet our threshold
+        if (normGyro.ZAxis > 1 || normGyro.ZAxis < -1) {
+            normGyro.ZAxis /= 100;
+            yaw += normGyro.ZAxis;
+        }
+
+        //Keep our angle between 0-359 degrees
+        if (yaw < 0)
+            yaw += 360;
+        else if (yaw > 359)
+            yaw -= 360;
+
+        AcX = normAccel.XAxis;
+        AcY = normAccel.YAxis;
+        AcZ = normAccel.ZAxis;
+
+        // update the next scan time
+        lastRead = millis() + READ_INTERVAL;
     }
-
-    //Keep our angle between 0-359 degrees
-    if (yaw < 0)
-        yaw += 360;
-    else if (yaw > 359)
-        yaw -= 360;
-
-    AcX = normAccel.XAxis;
-    AcY = normAccel.YAxis;
-    AcZ = normAccel.ZAxis;
 }
 
 
