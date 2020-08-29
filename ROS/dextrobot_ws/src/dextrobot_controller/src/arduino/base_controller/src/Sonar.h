@@ -15,7 +15,7 @@
 #define MIN_DISTANCE 0
 #define MAX_DISTANCE 200 // centimeters - Max distance for obstacle detection
 #define FIELD_OF_VIEW 0.26
-#define PING_INTERVAL 50 // Milliseconds between two consequent readings
+#define PING_INTERVAL 200 // Milliseconds between two consequent readings
 
 // Ros parameters
 #define FRAME_ID "sonar_ranger"

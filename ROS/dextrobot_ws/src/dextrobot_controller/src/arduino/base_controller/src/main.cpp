@@ -28,7 +28,7 @@
 
 // ROS message publish frequency
 // TODO: tune the frequency
-#define PUBLISH_DELAY 500 // 10Hz
+#define PUBLISH_DELAY 100 // 10Hz
 
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
@@ -146,15 +146,15 @@ void loop() {
 
   if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
-    String data_front_sonar = robot.sonar_1.composeStringMessage();
-    int length = data_front_sonar.length();
-    char data_final_front[length+1];
-    data_front_sonar.toCharArray(data_final_front, length+1);
-    range_front_msg.data = data_final_front;
+    // String data_front_sonar = robot.sonar_1.composeStringMessage();
+    // int length = data_front_sonar.length();
+    // char data_final_front[length+1];
+    // data_front_sonar.toCharArray(data_final_front, length+1);
+    // range_front_msg.data = data_final_front;
 
 
     String data_left_sonar = robot.sonar_2.composeStringMessage();
-    length = data_left_sonar.length();
+    int length = data_left_sonar.length();
     char data_final_left[length+1];
     data_left_sonar.toCharArray(data_final_left, length+1);
     range_left_msg.data = data_final_left;
