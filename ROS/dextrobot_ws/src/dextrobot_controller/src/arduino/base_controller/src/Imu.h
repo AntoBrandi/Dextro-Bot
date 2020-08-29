@@ -1,9 +1,4 @@
-#include <std_msgs/String.h>
-#include <sensor_msgs/Imu.h>
-#include <geometry_msgs/Vector3.h>
-#include <geometry_msgs/Quaternion.h>
 #include <Wire.h>
-#include <ros.h>
 #include <MPU6050.h>
 
 #ifndef Imu_h
@@ -29,8 +24,7 @@ class Imu
         Imu(/* args */);
         ~Imu();
         void sense();
-        std_msgs::String composeStringMessage();
-        sensor_msgs::Imu composeImuMessage(ros::Time now);
+        String composeStringMessage();
 };
 
 

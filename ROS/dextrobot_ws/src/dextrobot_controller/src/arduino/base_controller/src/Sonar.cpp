@@ -28,21 +28,7 @@ void Sonar::sense(){
     }   
 }
 
-
-// Compose the ROS message with the sensor data
-sensor_msgs::Range Sonar::composeRangeMessage(ros::Time now){
-    sensor_msgs::Range range_msg;
-    // compose the header
-    range_msg.radiation_type = sensor_msgs::Range::ULTRASOUND;
-    range_msg.header.frame_id = FRAME_ID;
-    range_msg.field_of_view = FIELD_OF_VIEW;
-    range_msg.min_range = MIN_DISTANCE;
-    range_msg.max_range = MAX_DISTANCE/100;
-    range_msg.header.stamp = now;
-
-    // compose the body
-    range_msg.range = (float)distance/100;  
-
-
-    return range_msg;
+String Sonar::composeStringMessage(){
+    String data = String((float)distance/100);
+    return data;
 }

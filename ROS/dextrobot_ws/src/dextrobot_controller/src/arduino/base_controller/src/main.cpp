@@ -13,17 +13,15 @@
 #include <Dextrobot.h>
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Vector3.h>
-#include <sensor_msgs/Range.h>
 #include <std_msgs/String.h>
 
 // Topic Names
 // PUBLISH TOPIC
 #define ROS_TOPIC_IMU "imu_raw"
-#define ROS_TOPIC_RANGE_FRONT "range_front"
-#define ROS_TOPIC_RANGE_LEFT "range_left"
-#define ROS_TOPIC_RANGE_RIGHT "range_right"
-#define ROS_TOPIC_RANGE_BACK "range_back"
+#define ROS_TOPIC_RANGE_FRONT "range_front_raw"
+#define ROS_TOPIC_RANGE_LEFT "range_left_raw"
+#define ROS_TOPIC_RANGE_RIGHT "range_right_raw"
+#define ROS_TOPIC_RANGE_BACK "range_back_raw"
 #define ROS_TOPIC_DEBUG "debug"
 // SUBSCRIBE TOPIC
 #define ROS_TOPIC_CMD_VEL "cmd_vel"
@@ -35,11 +33,11 @@
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
 // Publishers
-sensor_msgs::Imu imu_msg;
-sensor_msgs::Range range_front_msg;
-sensor_msgs::Range range_left_msg;
-sensor_msgs::Range range_right_msg;
-sensor_msgs::Range range_back_msg;
+std_msgs::String imu_msg;
+std_msgs::String range_front_msg;
+std_msgs::String range_left_msg;
+std_msgs::String range_right_msg;
+std_msgs::String range_back_msg;
 std_msgs::String debug_msg;
 ros::Publisher pub_range_front(ROS_TOPIC_RANGE_FRONT, &range_front_msg);
 ros::Publisher pub_range_left(ROS_TOPIC_RANGE_LEFT, &range_left_msg);
@@ -56,13 +54,11 @@ unsigned long publisher_timer;
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Twist& msg){
-  geometry_msgs::Vector3 linear = msg.linear;
-  geometry_msgs::Vector3 angular = msg.angular;
   // extract only useful parameters. No linear mouvement possible over z axis
   // and no rotation mouvements possible over x and y axis
-  float x_lin = linear.x;
-  float y_lin = linear.y;
-  float z_ang = angular.z;
+  float x_lin = msg.linear.x;
+  float y_lin = msg.linear.y;
+  float z_ang = msg.angular.z;
 
   // Move the robot according to the received velocity message
   if(x_lin>0){
@@ -104,7 +100,6 @@ void onCmdVelMsg(const geometry_msgs::Twist& msg){
     robot.stop();
   }
 }
-
 
 // Subscribers
 // CMD_VEL 
@@ -151,11 +146,38 @@ void loop() {
 
   if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
-    range_front_msg = robot.sonar_1.composeRangeMessage(nh.now());
-    range_left_msg = robot.sonar_2.composeRangeMessage(nh.now());
-    range_right_msg = robot.sonar_3.composeRangeMessage(nh.now());
-    range_back_msg = robot.sonar_4.composeRangeMessage(nh.now());
-    imu_msg = robot.imu.composeImuMessage(nh.now());
+    String data_front_sonar = robot.sonar_1.composeStringMessage();
+    int length = data_front_sonar.length();
+    char data_final_front[length+1];
+    data_front_sonar.toCharArray(data_final_front, length+1);
+    range_front_msg.data = data_final_front;
+
+
+    String data_left_sonar = robot.sonar_2.composeStringMessage();
+    length = data_left_sonar.length();
+    char data_final_left[length+1];
+    data_left_sonar.toCharArray(data_final_left, length+1);
+    range_left_msg.data = data_final_left;
+
+
+    String data_right_sonar = robot.sonar_3.composeStringMessage();
+    length = data_right_sonar.length();
+    char data_final_right[length+1];
+    data_right_sonar.toCharArray(data_final_right, length+1);
+    range_right_msg.data = data_final_right;
+
+
+    String data_back_sonar = robot.sonar_4.composeStringMessage();
+    length = data_back_sonar.length();
+    char data_final_back[length+1];
+    data_back_sonar.toCharArray(data_final_back, length+1);
+    range_back_msg.data = data_final_back;
+
+    String data = robot.imu.composeStringMessage();
+    length = data.length();
+    char data_final[length+1];
+    data.toCharArray(data_final, length+1);
+    imu_msg.data = data_final;
 
     // publish the messages
     pub_range_front.publish(&range_front_msg);

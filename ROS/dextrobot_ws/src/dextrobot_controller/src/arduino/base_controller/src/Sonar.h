@@ -6,8 +6,6 @@
   Copyright (c) 2020 Antonio Brandi.  All right reserved.
 */
 #include <NewPing.h>
-#include <sensor_msgs/Range.h>
-#include <ros.h>
 
 #ifndef Sonar_h
 #define Sonar_h
@@ -37,7 +35,7 @@ class Sonar
         Sonar(uint8_t triggerPin, uint8_t echoPin);
         ~Sonar();
         void sense();
-        sensor_msgs::Range composeRangeMessage(ros::Time now);
+        String composeStringMessage();
 };
 
 
