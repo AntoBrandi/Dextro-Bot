@@ -9,6 +9,23 @@
   <!-- Robot mechanical and motor parameters -->
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:property name="wheel_radius" value="0.04" />
+  <!-- Sonar parameters -->
+	<!-- front sonar -->
+	<xacro:property name="front_sonar_offset_x" value="0.0" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="front_sonar_offset_y" value="0.1" />
+	<xacro:property name="front_sonar_offset_z" value="0.0" />
+	<!-- left sonar -->
+	<xacro:property name="left_sonar_offset_x" value="-0.09" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="left_sonar_offset_y" value="0.0" />
+	<xacro:property name="left_sonar_offset_z" value="0.0" />
+	<!-- right sonar -->
+	<xacro:property name="right_sonar_offset_x" value="0.06" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="right_sonar_offset_y" value="0.0" />
+	<xacro:property name="right_sonar_offset_z" value="0.0" />
+	<!-- back sonar -->
+	<xacro:property name="back_sonar_offset_x" value="0.0" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
+	<xacro:property name="back_sonar_offset_y" value="-0.1" />
+	<xacro:property name="back_sonar_offset_z" value="0.0" />
 
 	<!-- BASE FOOTPRINT -->
 	  <xacro:if value="${publish_bf}">
@@ -53,6 +70,70 @@
        </geometry>
     </collision>
   </link>
+
+  <!-- FRONT SONAR SENSOR -->
+  <link name="${prefix}front_sonar">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+	</link>
+
+  <joint name="${prefix}front_sonar_joint" type="fixed">
+		<origin xyz="${front_sonar_offset_x} ${front_sonar_offset_y} ${front_sonar_offset_z}" rpy="0 0 ${PI/2}" /> 
+		<parent link="${prefix}base_link"/>
+		<child link="${prefix}front_sonar"/>
+	</joint>
+
+  <!-- LEFT SONAR SENSOR -->
+  <link name="${prefix}left_sonar">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+	</link>
+
+  <joint name="${prefix}left_sonar_joint" type="fixed">
+		<origin xyz="${left_sonar_offset_x} ${left_sonar_offset_y} ${left_sonar_offset_z}" rpy="0 0 ${PI}" /> 
+		<parent link="${prefix}base_link"/>
+		<child link="${prefix}left_sonar"/>
+	</joint>
+
+  <!-- RIGHT SONAR SENSOR -->
+  <link name="${prefix}right_sonar">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+	</link>
+
+  <joint name="${prefix}right_sonar_joint" type="fixed">
+		<origin xyz="${right_sonar_offset_x} ${right_sonar_offset_y} ${right_sonar_offset_z}" rpy="0 0 0" /> 
+		<parent link="${prefix}base_link"/>
+		<child link="${prefix}right_sonar"/>
+	</joint>
+
+  <!-- BACK SONAR SENSOR -->
+  <link name="${prefix}back_sonar">
+		  <visual>
+			  <origin xyz="0 0 0" rpy="0 0 0" />
+			  <geometry>
+				 <box size="0.001 0.001 0.001" />
+			  </geometry>
+		  </visual>
+	</link>
+
+  <joint name="${prefix}back_sonar_joint" type="fixed">
+		<origin xyz="${back_sonar_offset_x} ${back_sonar_offset_y} ${back_sonar_offset_z}" rpy="0 0 -${PI/2}" /> 
+		<parent link="${prefix}base_link"/>
+		<child link="${prefix}back_sonar"/>
+	</joint>
 
   </xacro:macro>
 </robot>
