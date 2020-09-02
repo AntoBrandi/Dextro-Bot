@@ -146,15 +146,15 @@ void loop() {
 
   if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
-    // String data_front_sonar = robot.sonar_1.composeStringMessage();
-    // int length = data_front_sonar.length();
-    // char data_final_front[length+1];
-    // data_front_sonar.toCharArray(data_final_front, length+1);
-    // range_front_msg.data = data_final_front;
+    String data_front_sonar = robot.sonar_1.composeStringMessage();
+    int length = data_front_sonar.length();
+    char data_final_front[length+1];
+    data_front_sonar.toCharArray(data_final_front, length+1);
+    range_front_msg.data = data_final_front;
 
 
     String data_left_sonar = robot.sonar_2.composeStringMessage();
-    int length = data_left_sonar.length();
+    length = data_left_sonar.length();
     char data_final_left[length+1];
     data_left_sonar.toCharArray(data_final_left, length+1);
     range_left_msg.data = data_final_left;
