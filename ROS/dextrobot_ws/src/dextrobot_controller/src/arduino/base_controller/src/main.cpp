@@ -22,13 +22,11 @@
 #define ROS_TOPIC_RANGE_LEFT "range_left_raw"
 #define ROS_TOPIC_RANGE_RIGHT "range_right_raw"
 #define ROS_TOPIC_RANGE_BACK "range_back_raw"
-#define ROS_TOPIC_DEBUG "debug"
 // SUBSCRIBE TOPIC
 #define ROS_TOPIC_CMD_VEL "cmd_vel"
 
 // ROS message publish frequency
-// TODO: tune the frequency
-#define PUBLISH_DELAY 100 // 10Hz
+#define PUBLISH_DELAY 50 // 10Hz
 
 // Init a ROS node on the Arduino controller
 ros::NodeHandle nh;
@@ -38,19 +36,18 @@ std_msgs::String range_front_msg;
 std_msgs::String range_left_msg;
 std_msgs::String range_right_msg;
 std_msgs::String range_back_msg;
-std_msgs::String debug_msg;
 ros::Publisher pub_range_front(ROS_TOPIC_RANGE_FRONT, &range_front_msg);
 ros::Publisher pub_range_left(ROS_TOPIC_RANGE_LEFT, &range_left_msg);
 ros::Publisher pub_range_right(ROS_TOPIC_RANGE_RIGHT, &range_right_msg);
 ros::Publisher pub_range_back(ROS_TOPIC_RANGE_BACK, &range_back_msg);
 ros::Publisher pub_imu(ROS_TOPIC_IMU, &imu_msg);
-ros::Publisher pub_debug(ROS_TOPIC_DEBUG, &debug_msg);
 
 // Create an instance of the Robot with its methods
 Dextrobot robot;
 
 // Record the last time a publish operation happened
 unsigned long publisher_timer;
+int8_t publisher_turn = 0;
 
 // Callback function that is called once a message is published on the topic /cmd_vel on which this Arduino is subscribed
 void onCmdVelMsg(const geometry_msgs::Vector3& msg){
@@ -117,7 +114,6 @@ void setup() {
   nh.advertise(pub_range_right);
   nh.advertise(pub_range_back);
   nh.advertise(pub_imu);
-  nh.advertise(pub_debug);
 
   // Init the robot and it's stepper motor
   robot = Dextrobot();
@@ -146,44 +142,62 @@ void loop() {
 
   if (millis() >= publisher_timer) {
     // compose and publish the sensor messages
-    String data_front_sonar = robot.sonar_1.composeStringMessage();
-    int length = data_front_sonar.length();
-    char data_final_front[length+1];
-    data_front_sonar.toCharArray(data_final_front, length+1);
-    range_front_msg.data = data_final_front;
+    if(publisher_turn==0){
+      String data_front_sonar = robot.sonar_1.composeStringMessage();
+      int length = data_front_sonar.length();
+      char data_final_front[length+1];
+      data_front_sonar.toCharArray(data_final_front, length+1);
+      range_front_msg.data = data_final_front;
 
+      // publish the message
+      pub_range_front.publish(&range_front_msg);
 
-    String data_left_sonar = robot.sonar_2.composeStringMessage();
-    length = data_left_sonar.length();
-    char data_final_left[length+1];
-    data_left_sonar.toCharArray(data_final_left, length+1);
-    range_left_msg.data = data_final_left;
+      publisher_turn++;
+    }
+    else if (publisher_turn==1){
+      String data_left_sonar = robot.sonar_2.composeStringMessage();
+      int length = data_left_sonar.length();
+      char data_final_left[length+1];
+      data_left_sonar.toCharArray(data_final_left, length+1);
+      range_left_msg.data = data_final_left;
 
+      // publish the message
+      pub_range_left.publish(&range_left_msg);
 
-    String data_right_sonar = robot.sonar_3.composeStringMessage();
-    length = data_right_sonar.length();
-    char data_final_right[length+1];
-    data_right_sonar.toCharArray(data_final_right, length+1);
-    range_right_msg.data = data_final_right;
+      publisher_turn++;
+    }
+    else if (publisher_turn==2){
+      String data_right_sonar = robot.sonar_3.composeStringMessage();
+      int length = data_right_sonar.length();
+      char data_final_right[length+1];
+      data_right_sonar.toCharArray(data_final_right, length+1);
+      range_right_msg.data = data_final_right;
 
+      // publish the message
+      pub_range_right.publish(&range_right_msg);
 
-    String data_back_sonar = robot.sonar_4.composeStringMessage();
-    length = data_back_sonar.length();
-    char data_final_back[length+1];
-    data_back_sonar.toCharArray(data_final_back, length+1);
-    range_back_msg.data = data_final_back;
+      publisher_turn++;
+    }
+    else{
+      String data_back_sonar = robot.sonar_4.composeStringMessage();
+      int length = data_back_sonar.length();
+      char data_final_back[length+1];
+      data_back_sonar.toCharArray(data_final_back, length+1);
+      range_back_msg.data = data_final_back;
+
+      // publish the message
+      pub_range_back.publish(&range_back_msg);
+
+      publisher_turn = 0;
+    }   
 
     String data = robot.imu.composeStringMessage();
-    length = data.length();
+    int length = data.length();
     char data_final[length+1];
     data.toCharArray(data_final, length+1);
     imu_msg.data = data_final;
 
     // publish the messages
-    pub_range_front.publish(&range_front_msg);
-    pub_range_left.publish(&range_left_msg);
-    pub_range_right.publish(&range_right_msg);
-    pub_range_back.publish(&range_back_msg);
     pub_imu.publish(&imu_msg);    
 
     // update the last time a message has been published via ROS

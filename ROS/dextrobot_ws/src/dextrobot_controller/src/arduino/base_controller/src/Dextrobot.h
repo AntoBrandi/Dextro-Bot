@@ -25,26 +25,17 @@
 #define DIR_STEPPER_4 13
 #define STEP_STEPPER_4 12
 // SONAR 1 - Front sonar
-#define TRIGGER_FRONT_SONAR 30
-#define ECHO_FRONT_SONAR 31
+#define TRIGGER_FRONT_SONAR 22
+#define ECHO_FRONT_SONAR 23
 // SONAR 2 - Left sonar
-#define TRIGGER_LEFT_SONAR 22
-#define ECHO_LEFT_SONAR 23
+#define TRIGGER_LEFT_SONAR 26
+#define ECHO_LEFT_SONAR 27
 // SONAR 3 - Right sonar
-#define TRIGGER_RIGHT_SONAR 26
-#define ECHO_RIGHT_SONAR 27
+#define TRIGGER_RIGHT_SONAR 24
+#define ECHO_RIGHT_SONAR 25
 // SONAR 4 - Back sonar
 #define TRIGGER_BACK_SONAR 28
 #define ECHO_BACK_SONAR 29
-
-// TODO: tune this
-#define SUPERSONIC 1500
-#define INSANE 1000
-#define SUPERFAST 800
-#define FAST 600
-#define NORMAL 400
-#define SLOW 300
-
 
 #ifndef Dextrobot_h
 #define Dextrobot_h
@@ -71,16 +62,16 @@ public:
     ~Dextrobot();
 
     // omnidirectional mouvement functions
-    void goForward(float velocity = NORMAL);
-    void goBackward(float velocity = NORMAL);
-    void goRight(float velocity = NORMAL);
-    void goLeft(float velocity = NORMAL);
-    void goForwardRight(float velocity = NORMAL);
-    void goForwardLeft(float velocity = NORMAL);
-    void goBackwardRight(float velocity = NORMAL);
-    void goBackwardLeft(float velocity = NORMAL);
-    void rotateClockwise(float velocity = NORMAL);
-    void rotateCounterClockwise(float velocity = NORMAL);
+    void goForward(float velocity);
+    void goBackward(float velocity);
+    void goRight(float velocity);
+    void goLeft(float velocity);
+    void goForwardRight(float velocity);
+    void goForwardLeft(float velocity);
+    void goBackwardRight(float velocity);
+    void goBackwardLeft(float velocity);
+    void rotateClockwise(float velocity);
+    void rotateCounterClockwise(float velocity);
     void stop();
 
     // sensor functions
