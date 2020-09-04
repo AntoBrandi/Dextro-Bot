@@ -14,7 +14,7 @@ def callback(data):
     readings = data.data.split(",")
     sensor_imu = Imu()
     # compose the message
-    sensor_imu.header.frame_id = "imu"
+    sensor_imu.header.frame_id = "dextrobot_imu_link"
     sensor_imu.header.stamp = rospy.Time.now()
 
     q = quaternion_from_euler(float(readings[3]), float(readings[4]), float(readings[5]))
