@@ -2,11 +2,6 @@
 
 Imu::Imu(/* args */)
 {
-    /* initialize random seed: */
-    srand (time(NULL));
-    /* generate secret number between 1 and 10: */
-    int offset = rand() % 50 + 1;
-    lastRead = millis() + offset;
 }
 
 Imu::~Imu()
@@ -20,8 +15,6 @@ float Imu::toRadians(float degree){
 
 // reads the value coming from the IMU sensor and update the class parameters
 void Imu::sense(){
-    if(millis()>lastRead){
-        // Read normalized values 
         Vector normAccel = mpu.readNormalizeAccel();
         Vector normGyro = mpu.readNormalizeGyro();
 
@@ -44,10 +37,6 @@ void Imu::sense(){
         AcX = normAccel.XAxis;
         AcY = normAccel.YAxis;
         AcZ = normAccel.ZAxis;
-
-        // update the next scan time
-        lastRead = millis() + READ_INTERVAL;
-    }
 }
 
 
