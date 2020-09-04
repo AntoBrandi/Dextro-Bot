@@ -27,7 +27,6 @@
 #define ROS_TOPIC_CMD_VEL "cmd_vel"
 
 // ROS message publish frequency
-// TODO: tune the frequency
 #define PUBLISH_DELAY 100 // 10Hz
 
 // Init a ROS node on the Arduino controller
