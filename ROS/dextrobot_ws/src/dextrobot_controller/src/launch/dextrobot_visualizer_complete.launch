@@ -6,6 +6,14 @@
     <!-- Interface Nodes with the arduino -->
     <include file="$(find dextrobot_controller)/src/launch/dextrobot_interface.launch" />
 
+    <!-- Launch the raspberry pi camera interface -->
+    <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/> 
+
+    <!-- Launch the rosbridge server -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+        <arg name="port" value="9091"/>
+    </include>
+
     <!-- URDF visualizer and TF publisher -->
     <include file="$(find dextrobot_description)/src/launch/dextrobot_rviz.launch" >
         <arg name="rviz_config" value="$(arg rviz_config)"/>
