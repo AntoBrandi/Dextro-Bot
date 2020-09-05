@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="rviz_config" default="$(find dextrobot_description)/src/rviz/dextrobot_visualizer.rviz"/>
+    <arg name="rviz_config" default="$(find dextrobot_controller)/src/rviz/dextrobot_visualizer.rviz"/>
 
     <!-- Interface Nodes with the arduino -->
     <include file="$(find dextrobot_controller)/src/launch/dextrobot_interface.launch" />
