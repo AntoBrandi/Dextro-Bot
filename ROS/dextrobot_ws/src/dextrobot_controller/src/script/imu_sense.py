@@ -9,6 +9,7 @@ import math
 import rospy
 from sensor_msgs.msg import Imu
 from tf.transformations import quaternion_from_euler
+import time
 
 #some MPU6050 Registers and their Address
 PWR_MGMT_1   = 0x6B
@@ -63,7 +64,6 @@ def read_raw_data(addr):
 
 
 def publish_imu(roll, pitch, yaw, Ax, Ay, Az):
-    global pub
     
     # compose the message
     sensor_imu = Imu()
@@ -94,9 +94,8 @@ Device_Address = 0x68   # MPU6050 device address
 
 MPU_Init()
 
-yaw = 0.0
-
 if __name__ == '__main__':
+    yaw = 0.0
     print (" Reading Data of Gyroscope and Accelerometer")
 
     while True:
@@ -126,7 +125,7 @@ if __name__ == '__main__':
             
         # Ignore the gyro if our angular velocity does not meet our threshold
         if (Gz > 1 or Gz < -1):
-            Gz /= 100
+            Gz /= 20
             yaw += Gz
 
         # Keep our angle between 0-359 degrees
@@ -136,4 +135,3 @@ if __name__ == '__main__':
             yaw -= 360
         
         publish_imu(roll, pitch, yaw, Ax, Ay, Az)
-        print ("Roll=%.2f" %roll, u'\u00b0'+ "/s", "\tPitch=%.2f" %pitch, u'\u00b0'+ "/s", "\tYaw=%.2f" %yaw, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
