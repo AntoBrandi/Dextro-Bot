@@ -127,7 +127,7 @@ if __name__ == '__main__':
         roll = (math.atan2(Ay, Az)*180.0)/M_PI
             
         # Ignore the gyro if our angular velocity does not meet our threshold
-        if (Gz > 1 || Gz < -1) {
+        if (Gz > 1 or Gz < -1) {
             Gz /= 100;
             yaw += Gz;
         }
