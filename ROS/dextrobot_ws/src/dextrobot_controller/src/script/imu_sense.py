@@ -31,10 +31,6 @@ pub = rospy.Publisher('imu', Imu, queue_size=10)
 rospy.init_node('imu_sense', anonymous=True)
 rate = rospy.Rate(10) # 10hz
 
-bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
-Device_Address = 0x68   # MPU6050 device address
-
-MPU_Init()
 roll = 0.0
 pitch = 0.0
 yaw = 0.0
@@ -97,6 +93,11 @@ def publish_imu():
         pub.publish(sensor_imu)
         rate.sleep()
 
+
+bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
+Device_Address = 0x68   # MPU6050 device address
+
+MPU_Init()
 
 if __name__ == '__main__':
     print (" Reading Data of Gyroscope and Accelerometer")
