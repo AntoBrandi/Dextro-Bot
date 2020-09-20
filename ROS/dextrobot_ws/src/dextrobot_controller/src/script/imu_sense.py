@@ -100,6 +100,7 @@ Device_Address = 0x68   # MPU6050 device address
 MPU_Init()
 
 if __name__ == '__main__':
+    global roll, pitch, yaw, Ax, Ay, Az, rate
     print (" Reading Data of Gyroscope and Accelerometer")
 
     while True:
