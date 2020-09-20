@@ -19,15 +19,15 @@ Dextrobot::~Dextrobot()
 {
 }
 
-void Dextrobot::goForward(float velocity){
+void Dextrobot::goBackward(float velocity){
   // Set the speed in steps per second:
-  motor_1.setSpeed(velocity);
-  motor_2.setSpeed(-velocity);
-  motor_3.setSpeed(velocity);
-  motor_4.setSpeed(-velocity);
+  motor_1.setSpeed(-velocity);
+  motor_2.setSpeed(velocity);
+  motor_3.setSpeed(-velocity);
+  motor_4.setSpeed(velocity);
 }
 
-void Dextrobot::goBackward(float velocity){
+void Dextrobot::goForward(float velocity){
     // Set the speed in steps per second:
     motor_1.setSpeed(-velocity);
     motor_2.setSpeed(velocity);

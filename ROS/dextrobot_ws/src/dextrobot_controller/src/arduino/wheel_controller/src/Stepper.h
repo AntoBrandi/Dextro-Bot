@@ -14,7 +14,7 @@
 #define STEP_PER_REVOLUTION 360/STEP_ANGLE
 #define WHEEL_RADIUS 0.04 // meters
 // Max speed of the steppers in steps per second
-#define MAX_SPEED 1500
+#define MAX_SPEED 600
 // Max acceleration of the steppers in steps per second ^2
 #define MAX_ACCELERATION 1000
 

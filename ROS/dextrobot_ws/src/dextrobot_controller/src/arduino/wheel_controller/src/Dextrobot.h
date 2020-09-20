@@ -11,17 +11,17 @@
 // CNC Shield
 #define ENABLE_SHIELD 8
 // MOTOR 1 - Front Left
-#define DIR_STEPPER_1 5
-#define STEP_STEPPER_1 2
+#define DIR_STEPPER_1 7
+#define STEP_STEPPER_1 4
 // MOTOR 2 - Front Right
-#define DIR_STEPPER_2 6
-#define STEP_STEPPER_2 3
+#define DIR_STEPPER_2 5
+#define STEP_STEPPER_2 2
 // MOTOR 3 - Back Left
-#define DIR_STEPPER_3 7
-#define STEP_STEPPER_3 4
+#define DIR_STEPPER_3 13
+#define STEP_STEPPER_3 12
 // MOTOR 4 - Back Right
-#define DIR_STEPPER_4 13
-#define STEP_STEPPER_4 12
+#define DIR_STEPPER_4 6
+#define STEP_STEPPER_4 3
 
 
 #ifndef Dextrobot_h

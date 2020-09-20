@@ -1,15 +1,20 @@
 <launch>
 
     <!-- Launch the ros interface with Arduino -->
-    <node pkg="rosserial_python" type="serial_node.py" name="imu_watcher" output="screen">
+    <node pkg="rosserial_python" type="serial_node.py" name="arduino_interface" output="screen">
         <param name="port" value="/dev/ttyACM0"/>
     </node>
 
-    <!-- Launch the IMU message converter from string to sensor_msgs/Imu -->
-    <node pkg="dextrobot_controller" type="imu_raw_subscriber.py" name="imu_converter" respawn="true" output="screen"/>
+    <!-- Launch the IMU sense node that reads the MPU6050 sensor -->
+    <node pkg="dextrobot_controller" type="imu_sense.py" name="imu_sense" respawn="true" output="screen"/>
 
-    <!-- Launch the Range message converter from string to sensor_msgs/Range -->
-    <node pkg="dextrobot_controller" type="sonar_raw_subscriber.py" name="sonar_converter" respawn="true" output="screen"/>
+    <!-- Launch the node that reads from the HC-SR04 sensor -->
+    <node pkg="dextrobot_controller" type="front_sonar_sense.py" name="front_sonar_sense" respawn="true" output="screen"/>
+    <!--
+    <node pkg="dextrobot_controller" type="left_sonar_sense.py" name="left_sonar_sense" respawn="true" output="screen"/>
+    <node pkg="dextrobot_controller" type="right_sonar_sense.py" name="right_sonar_sense" respawn="true" output="screen"/>
+    <node pkg="dextrobot_controller" type="back_sonar_sense.py" name="back_sonar_sense" respsawn="true" output="screen"/>
+    -->
 
     <!-- Launch the Twist message converter from Twist to Vector3 -->
     <node pkg="dextrobot_controller" type="cmd_vel_converter.py" name="cmd_vel_converter" respawn="true" output="screen"/>

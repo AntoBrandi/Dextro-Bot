@@ -33,6 +33,10 @@ float Stepper::convertToStepsPerSecond(float ms){
 // Receives a speed in m/s and convert it to steps/s before applying it to the stepper
 void Stepper::setSpeed(float ms){
     speed = convertToStepsPerSecond(ms);
+    // filter the speed so taht all the motors can apply it
+    if(speed>MAX_SPEED){
+        speed = MAX_SPEED;
+    }
     motor.setSpeed(speed);
 }
 
