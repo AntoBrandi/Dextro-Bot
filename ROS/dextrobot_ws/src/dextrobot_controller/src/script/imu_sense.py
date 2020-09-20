@@ -127,16 +127,15 @@ if __name__ == '__main__':
         roll = (math.atan2(Ay, Az)*180.0)/M_PI
             
         # Ignore the gyro if our angular velocity does not meet our threshold
-        if (Gz > 1 or Gz < -1) {
-            Gz /= 100;
-            yaw += Gz;
-        }
+        if (Gz > 1 or Gz < -1):
+            Gz /= 100
+            yaw += Gz
 
         # Keep our angle between 0-359 degrees
-        if (yaw < 0)
-            yaw += 360;
-        else if (yaw > 359)
-            yaw -= 360;
+        if (yaw < 0):
+            yaw += 360
+        elif (yaw > 359):
+            yaw -= 360
         
         publish_imu()
         print ("Roll=%.2f" %roll, u'\u00b0'+ "/s", "\tPitch=%.2f" %pitch, u'\u00b0'+ "/s", "\tYaw=%.2f" %yaw, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
