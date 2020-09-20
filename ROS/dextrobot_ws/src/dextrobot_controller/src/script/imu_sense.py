@@ -29,14 +29,6 @@ M_PI = 3.14159265358979323846
 # init ROS publisher
 pub = rospy.Publisher('imu', Imu, queue_size=10)
 rospy.init_node('imu_sense', anonymous=True)
-rate = rospy.Rate(10) # 10hz
-
-roll = 0.0
-pitch = 0.0
-yaw = 0.0
-Ax = 0.0
-Ay = 0.0
-Az = 0.0
 
 
 def MPU_Init():
@@ -70,13 +62,18 @@ def read_raw_data(addr):
         return value
 
 
-def publish_imu():
-    global pub, roll, pitch, yaw, Ax, Ay, Az, rate
+def publish_imu(roll, pitch, yaw, Ax, Ay, Az):
+    global pub
     
     # compose the message
     sensor_imu = Imu()
     sensor_imu.header.frame_id = "dextrobot_imu_link"
     sensor_imu.header.stamp = rospy.Time.now()
+
+    # convert from degrees to radians
+    roll = roll * M_PI/180
+    pitch = pitch * M_PI/180
+    yaw = yaw * M_PI/180
 
     q = quaternion_from_euler(roll, pitch, yaw)
 
@@ -89,9 +86,7 @@ def publish_imu():
     sensor_imu.linear_acceleration.z = float(Az)
 
     # publish the composed message
-    if not rospy.is_shutdown():
-        pub.publish(sensor_imu)
-        rate.sleep()
+    pub.publish(sensor_imu)
 
 
 bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
@@ -99,8 +94,9 @@ Device_Address = 0x68   # MPU6050 device address
 
 MPU_Init()
 
+yaw = 0.0
+
 if __name__ == '__main__':
-    global roll, pitch, yaw, Ax, Ay, Az, rate
     print (" Reading Data of Gyroscope and Accelerometer")
 
     while True:
@@ -139,5 +135,5 @@ if __name__ == '__main__':
         elif (yaw > 359):
             yaw -= 360
         
-        publish_imu()
+        publish_imu(roll, pitch, yaw, Ax, Ay, Az)
         print ("Roll=%.2f" %roll, u'\u00b0'+ "/s", "\tPitch=%.2f" %pitch, u'\u00b0'+ "/s", "\tYaw=%.2f" %yaw, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
