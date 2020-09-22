@@ -10,11 +10,9 @@
 
     <!-- Launch the node that reads from the HC-SR04 sensor -->
     <node pkg="dextrobot_controller" type="front_sonar_sense.py" name="front_sonar_sense" respawn="true" output="screen"/>
-    <!--
     <node pkg="dextrobot_controller" type="left_sonar_sense.py" name="left_sonar_sense" respawn="true" output="screen"/>
     <node pkg="dextrobot_controller" type="right_sonar_sense.py" name="right_sonar_sense" respawn="true" output="screen"/>
     <node pkg="dextrobot_controller" type="back_sonar_sense.py" name="back_sonar_sense" respsawn="true" output="screen"/>
-    -->
 
     <!-- Launch the Twist message converter from Twist to Vector3 -->
     <node pkg="dextrobot_controller" type="cmd_vel_converter.py" name="cmd_vel_converter" respawn="true" output="screen"/>

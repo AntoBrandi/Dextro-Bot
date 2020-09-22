@@ -16,8 +16,8 @@ GPIO_ECHO = 11
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-rospy.init_node('front_sonar_sense', anonymous=True)
-pub = rospy.Publisher("range_front", Range, queue_size=10)
+rospy.init_node('left_sonar_sense', anonymous=True)
+pub = rospy.Publisher("range_left", Range, queue_size=10)
 
 distance = 0.0
  
@@ -37,7 +37,7 @@ def get_distance():
     # save StartTime
     while GPIO.input(GPIO_ECHO) == 0:
         StartTime = time.time()
-        
+
     # save time of arrival
     while GPIO.input(GPIO_ECHO) == 1:
         StopTime = time.time()
@@ -59,7 +59,7 @@ def publish_range():
     sensor_range.min_range = 0
     sensor_range.max_range = 2
     sensor_range.range = distance
-    sensor_range.header.frame_id = "dextrobot_front_sonar"
+    sensor_range.header.frame_id = "dextrobot_left_sonar"
 
     # publish the composed message
     pub.publish(sensor_range)
