@@ -8,7 +8,7 @@ import cv2
 from sensor_msgs.msg import CompressedImage
 from raspicam_node.msg import MotionVectors
 from cv_bridge import CvBridge, CvBridgeError
-from std_msgs.msg import String
+from geometry_msgs.msg import Vector3
 
 # Motion vectors with SAD values above threshold will be ignored:
 SAD_THRESHOLD = 650
@@ -19,9 +19,9 @@ cumulative_x = 0
 cumulative_y = 0
 
 def aggregate_imv(img, imv):
-    global cumulative_x, cumulative_y
-    height, width, channels = img.shape
-    mbx = int(math.ceil(width/16.0))
+	global cumulative_x, cumulative_y
+	height, width, channels = img.shape
+	mbx = int(math.ceil(width/16.0))
 	mby = int(math.ceil(height/16.0))
 
 	# Draw colored arrow per each macroblock:
@@ -32,22 +32,24 @@ def aggregate_imv(img, imv):
 			dy = imv.y[idx]
 			sad = imv.sad[idx]
 
-			x = i*16 + 8;
-			y = j*16 + 8;
+			x = i*16 + 8
+			y = j*16 + 8
 
 			if dx == 0 and dy == 0:
 				continue
 
 			if sad >= SAD_THRESHOLD:
 				continue
-
-            cumulative_x = cumulative_x + dx
-            cumulative_y = cumulative_y + dy
-
-    aggregate_imv = "Cumulative x: "+cumulative_x+"\nCumulative y: "+cumulative_y
-    pub.publish(aggregate_imv)
-    cumulative_y = 0
-    cumulative_x = 0
+				
+			cumulative_x = cumulative_x + dx
+			cumulative_y = cumulative_y + dy
+			
+	aggregate_imv = Vector3()
+	aggregate_imv.x = cumulative_x
+	aggregate_imv.y = cumulative_y
+	pub.publish(aggregate_imv)
+	cumulative_y = 0
+	cumulative_x = 0
 
 def img_callback(msg):
 	try:
@@ -65,8 +67,8 @@ def imv_callback(msg):
 if __name__ == '__main__':
 	img_topic = '/raspicam_node/image/compressed'
 	imv_topic = '/raspicam_node/motion_vectors'
-
-    pub = rospy.Publisher('imv_aggregate', String, queue_size=10)
+	
+	pub = rospy.Publisher('imv_aggregate', Vector3, queue_size=10)
 	rospy.init_node('imv_aggregate')
 	rospy.Subscriber(img_topic, CompressedImage, img_callback)
 	rospy.Subscriber(imv_topic, MotionVectors, imv_callback)
