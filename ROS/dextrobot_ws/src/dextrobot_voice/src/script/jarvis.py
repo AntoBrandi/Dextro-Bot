@@ -6,10 +6,16 @@ import speech_recognition as sr
 from gtts import gTTS
 from ros_interface import RosInterface
 
+# ROS Static params
+ROS_PUB_TOPIC = '/dextrobot/followme'
+ROS_PUB_MESSAGE = 'std_msgs/Bool'
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 WAKE_STRS = "ok jarvis"
 THANK_STRS = "thank you"
+
+ros = RosInterface('10.42.0.1')
 
 
 # Function that reads a string of text to the user
@@ -39,7 +45,12 @@ def get_audio():
     return said.lower()
 
 
-# ros = RosInterface('192.168.0.166')
+def set_enabled():
+    ros.publish(ROS_PUB_TOPIC, ROS_PUB_MESSAGE, True)
+
+
+def set_disabled():
+    ros.publish(ROS_PUB_TOPIC, ROS_PUB_MESSAGE, False)
 
 
 while True:
@@ -66,15 +77,20 @@ while True:
         if "follow" in text:
             speak("OK, let's go")
             # create an instance of the ros interface class that will publish messages on ROS topics
-            # ros.publish('/jarvis')
+            set_enabled()
+
+        if "come" in text:
+            speak("OK, let's go")
+            # create an instance of the ros interface class that will publish messages on ROS topics
+            set_enabled()
 
         if "free" in text:
             speak("OK, see you later")
-            # ros.publish('/jarvis')
+            set_disabled()
 
         if "stop" in text:
             speak("OK, see you later")
-            # ros.publish('/jarvis')
+            set_disabled()
 
     # detect if the user thank the assistant
     if text.count(THANK_STRS) > 0:

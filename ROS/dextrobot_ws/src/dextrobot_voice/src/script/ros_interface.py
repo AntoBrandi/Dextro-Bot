@@ -11,10 +11,10 @@ class RosInterface:
         except Exception as e:
             print('WebSocket Error: ' + str(e))
 
-    def publish(self, topic):
+    def publish(self, topic, msg_type, value):
         if self.isConnected():
-            talker = roslibpy.Topic(self.client, topic, 'std_msgs/String')
-            talker.publish(roslibpy.Message({'data': 'Moving the robot'}))
+            talker = roslibpy.Topic(self.client, topic, msg_type)
+            talker.publish(roslibpy.Message({'data': value}))
             print('Sending message...')
             talker.unadvertise()
         else:
@@ -28,6 +28,3 @@ class RosInterface:
             self.client.terminate()
         else:
             print('Connection was already closed')
-
-
-
