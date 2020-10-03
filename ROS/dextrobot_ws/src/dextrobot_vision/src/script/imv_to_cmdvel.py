@@ -7,10 +7,9 @@ from geometry_msgs.msg import Twist
 # Motion detections with lower value will be ignored
 X_THRESHOLD = 1500
 Y_THRESHOLD = 1500
-NEW_TRESHOLD = 1500
+TIME_TRESHOLD = 2
 # Avoid too fast or too frequent mouvements
-last_x = 0
-last_y = 0
+last_msg = 0
 
 def goLeft():
     twist_left = Twist()
@@ -26,19 +25,48 @@ def goRight():
     rospy.sleep(1)
     pub.publish(Twist())
 
+def goForward():
+    twist_forward = Twist()
+    twist_forward.linear.x = 1
+    pub.publish(twist_forward)
+    rospy.sleep(1)
+    pub.publish(Twist())
+
+def goBackward():
+    twist_backward = Twist()
+    twist_backward.linear.x = -1
+    pub.publish(twist_backward)
+    rospy.sleep(1)
+    pub.publish(Twist())
+
 def imv_callback(msg):
-    global last_x, last_y
+    global last_msg
+    upcoming_msg = rospy.get_time()
 
-    # Move the robot on its left
-    if msg.x >= X_THRESHOLD:
-        goLeft()
+    if (upcoming_msg-last_msg)>=TIME_TRESHOLD:
+        # Move right or left
+        if abs(msg.x)>=abs(msg.y):
+            # Move the robot on its left
+            if msg.x >= X_THRESHOLD:
+                last_msg = upcoming_msg
+                goLeft()
 
-    # Move the robot on its left
-    if msg.x <= -X_THRESHOLD:
-        goRight()
-    
-    last_x = msg.x
-    last_y = msg.y
+            # Move the robot on its right
+            if msg.x <= -X_THRESHOLD:
+                last_msg = upcoming_msg
+                goRight()
+        # Move forward or backward
+        else:
+            # Move the robot on its back
+            if msg.y >= Y_THRESHOLD:
+                last_msg = upcoming_msg
+                goBackward()
+
+            # Move the robot on its front
+            if msg.y <= -Y_THRESHOLD:
+                last_msg = upcoming_msg
+                goForward()
+
 
 if __name__ == '__main__':
 	imv_topic = '/imv_aggregate'

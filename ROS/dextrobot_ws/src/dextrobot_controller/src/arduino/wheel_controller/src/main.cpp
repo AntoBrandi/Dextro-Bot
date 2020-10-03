@@ -47,13 +47,21 @@ void onCmdVelMsg(const geometry_msgs::Vector3& msg){
   pub_debug.publish(&debug_msg);
 
   // Move the robot according to the received velocity message
-  if(abs(x_lin)>abs(z_ang)){
+  if((abs(x_lin)>abs(z_ang))&&(abs(x_lin)>abs(y_lin))){
     if(x_lin>0){
       robot.goForward(x_lin);
     }
 
     if(x_lin<0){
       robot.goBackward(x_lin);
+    }
+  }
+  else if(abs(y_lin)>abs(z_ang)){
+    if(y_lin>0){
+      robot.goLeft(y_lin);
+    }
+    if(y_lin<0){
+      robot.goRight(y_lin);
     }
   }
   else{
