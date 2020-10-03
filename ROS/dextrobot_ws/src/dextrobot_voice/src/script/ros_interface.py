@@ -5,7 +5,7 @@ class RosInterface:
 
     def __init__(self, host):
         try:
-            self.client = roslibpy.Ros(host=host, port=9090)
+            self.client = roslibpy.Ros(host=host, port=9091)
             self.client.run()
             print('Connected')
         except Exception as e:

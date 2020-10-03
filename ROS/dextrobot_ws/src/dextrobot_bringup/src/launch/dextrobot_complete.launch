@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="rviz_config" default="$(find dextrobot_controller)/src/rviz/dextrobot_complete.rviz"/>
+    <arg name="view_jsp"  default="false" />
+    <arg name="launch_rviz"  default="false" />
+
+    <!-- Interface Nodes with the arduino -->
+    <include file="$(find dextrobot_controller)/src/launch/dextrobot_interface.launch" />
+
+    <!-- URDF visualizer and TF publisher -->
+    <include file="$(find dextrobot_description)/src/launch/dextrobot_rviz.launch" >
+        <arg name="rviz_config" value="$(arg rviz_config)"/>
+        <arg name="view_jsp" value="$(arg view_jsp)"/>
+        <arg name="launch_rviz" value="$(arg launch_rviz)"/>
+    </include>
+
+    <!-- Vision system -->
+    <include file="$(find dextrobot_vision)/src/launch/dextrobot_vision.launch" />
+
+</launch>

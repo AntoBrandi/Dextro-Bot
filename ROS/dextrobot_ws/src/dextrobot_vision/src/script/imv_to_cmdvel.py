@@ -15,36 +15,36 @@ last_msg = 0
 isEnabled = False
 
 def goLeft():
-    twist_left = Twist()
-    twist_left.linear.y = 1
-    pub.publish(twist_left)
-    rospy.sleep(1)
-    pub.publish(Twist())
+	twist_left = Twist()
+	twist_left.linear.y = 1
+	pub.publish(twist_left)
+	rospy.sleep(1)
+	pub.publish(Twist())
 
 def goRight():
-    twist_right = Twist()
-    twist_right.linear.y = -1
-    pub.publish(twist_right)
-    rospy.sleep(1)
-    pub.publish(Twist())
+	twist_right = Twist()
+	twist_right.linear.y = -1
+	pub.publish(twist_right)
+	rospy.sleep(1)
+	pub.publish(Twist())
 
 def goForward():
-    twist_forward = Twist()
-    twist_forward.linear.x = 1
-    pub.publish(twist_forward)
-    rospy.sleep(1)
-    pub.publish(Twist())
+	twist_forward = Twist()
+	twist_forward.linear.x = 1
+	pub.publish(twist_forward)
+	rospy.sleep(1)
+	pub.publish(Twist())
 
 def goBackward():
-    twist_backward = Twist()
-    twist_backward.linear.x = -1
-    pub.publish(twist_backward)
-    rospy.sleep(1)
-    pub.publish(Twist())
+	twist_backward = Twist()
+	twist_backward.linear.x = -1
+	pub.publish(twist_backward)
+	rospy.sleep(1)
+	pub.publish(Twist())
 
 def imv_callback(msg):
-    global last_msg, isEnabled
-    upcoming_msg = rospy.get_time()
+	global last_msg, isEnabled
+	upcoming_msg = rospy.get_time()
 
 	if isEnabled:
 		if (upcoming_msg-last_msg)>=TIME_TRESHOLD:
@@ -72,8 +72,8 @@ def imv_callback(msg):
 					goForward()
 
 def enable_callback(msg):
-    global isEnabled
-    isEnabled = msg.data
+	global isEnabled
+	isEnabled = msg.data
 
 
 if __name__ == '__main__':
