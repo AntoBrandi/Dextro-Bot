@@ -58,7 +58,7 @@ def publish_range():
     sensor_range.field_of_view = 0.26
     sensor_range.min_range = 0
     sensor_range.max_range = 2
-    sensor_range.range = distance
+    sensor_range.range = distance/100 # distance in meters
     sensor_range.header.frame_id = "dextrobot_right_sonar"
 
     # publish the composed message

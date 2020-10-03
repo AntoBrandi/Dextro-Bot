@@ -4,6 +4,7 @@
   <arg name="prefix" default="dextrobot_"/>
   <arg name="rviz_config" default="$(find dextrobot_description)/src/rviz/dextrobot.rviz"/>
   <arg name="robot_model"  default="dextrobot.urdf.xacro"  doc="Different robot versions: ('')"/>
+  <arg name="view_jsp"  default="true" />
   
   <!-- Load the URDF into ROS parameter server -->
   <arg name="urdf_file" default="$(find xacro)/xacro '$(find dextrobot_description)/src/robot/$(arg robot_model)' prefix:=$(arg prefix) --inorder" />
@@ -11,8 +12,8 @@
 
 
   <!-- send fake joint values -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="use_gui" value="TRUE"/>
+  <node if="$(arg view_jsp)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="true"/>
   </node>
 
   <!-- Publish the TF based on the robot URDF -->

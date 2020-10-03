@@ -17,4 +17,9 @@
     <!-- Launch the Twist message converter from Twist to Vector3 -->
     <node pkg="dextrobot_controller" type="cmd_vel_converter.py" name="cmd_vel_converter" respawn="true" output="screen"/>
 
+    <!-- Launch the rosbridge server -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+        <arg name="port" value="9091"/>
+    </include>
+
 </launch>
