@@ -45,10 +45,10 @@ void Dextrobot::goRight(float velocity){
 
 void Dextrobot::goLeft(float velocity){
     // Set the speed in steps per second:
-    motor_1.setSpeed(-velocity);
-    motor_2.setSpeed(-velocity);
-    motor_3.setSpeed(velocity);
-    motor_4.setSpeed(velocity);
+    motor_1.setSpeed(velocity);
+    motor_2.setSpeed(velocity);
+    motor_3.setSpeed(-velocity);
+    motor_4.setSpeed(-velocity);
 }
 
 void Dextrobot::goForwardRight(float velocity){
@@ -85,10 +85,10 @@ void Dextrobot::goBackwardLeft(float velocity){
 
 void Dextrobot::rotateClockwise(float velocity){
     // Set the speed in steps per second:
-    motor_1.setSpeed(velocity);
-    motor_2.setSpeed(velocity);
-    motor_3.setSpeed(velocity);
-    motor_4.setSpeed(velocity);
+    motor_1.setSpeed(-velocity);
+    motor_2.setSpeed(-velocity);
+    motor_3.setSpeed(-velocity);
+    motor_4.setSpeed(-velocity);
 }
 
 void Dextrobot::rotateCounterClockwise(float velocity){
