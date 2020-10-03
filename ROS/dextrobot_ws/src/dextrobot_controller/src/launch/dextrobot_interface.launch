@@ -2,7 +2,7 @@
 
     <!-- Launch the ros interface with Arduino -->
     <node pkg="rosserial_python" type="serial_node.py" name="arduino_interface" output="screen">
-        <param name="port" value="/dev/ttyACM0"/>
+        <param name="port" value="/dev/ttyUSB0"/>
     </node>
 
     <!-- Launch the IMU sense node that reads the MPU6050 sensor -->
