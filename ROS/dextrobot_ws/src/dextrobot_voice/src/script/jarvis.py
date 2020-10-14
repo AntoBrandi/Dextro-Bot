@@ -15,7 +15,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 WAKE_STRS = "ok jarvis"
 THANK_STRS = "thank you"
 
-ros = RosInterface('192.168.0.166')
+ros = RosInterface('10.42.0.1')
 
 
 # Function that reads a string of text to the user
