@@ -21,8 +21,6 @@ cumulative_y = 0
 def aggregate_imv(img, imv):
 	global cumulative_x, cumulative_y
 	height, width, channels = img.shape
-	mbx = int(math.ceil(width/16.0))
-	mby = int(math.ceil(height/16.0))
 
 	# Draw colored arrow per each macroblock:
 	for j in range(0, imv.mby):
@@ -31,9 +29,6 @@ def aggregate_imv(img, imv):
 			dx = imv.x[idx]
 			dy = imv.y[idx]
 			sad = imv.sad[idx]
-
-			x = i*16 + 8
-			y = j*16 + 8
 
 			if dx == 0 and dy == 0:
 				continue
