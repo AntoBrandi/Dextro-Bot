@@ -1,8 +1,0 @@
-<launch>
-    <!-- Launch the raspberry pi camera interface -->
-    <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch"/>
-
-    <!-- Launch RVIZ for the visualization of the camera data -->
-    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find raspicam_node)/rviz/display_camera.rviz"/>
-
-</launch>

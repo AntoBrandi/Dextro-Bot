@@ -1,0 +1,17 @@
+<launch>
+    <arg name="view_imv"  default="true" />
+
+    <!-- Launch the raspberry pi camera interface -->
+    <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch">
+        <arg name="enable_imv" value="true"/>
+    </include>
+
+    <!-- Run the IMV viewer -->
+    <node if="$(arg view_imv)" pkg="raspicam_node" type="imv_view.py" name="imv_view" respawn="true" output="screen"/>
+
+    <!-- Run the IMV aggregator -->
+    <node pkg="dextrobot_vision" type="imv_aggregate.py" name="imv_aggregate" respawn="true"/>
+
+    <!-- Run the cmd_vel publisher based on the IMV -->
+    <node pkg="dextrobot_vision" type="imv_to_cmdvel.py" name="imv_to_cmdvel" respawn="true"/>
+</launch>

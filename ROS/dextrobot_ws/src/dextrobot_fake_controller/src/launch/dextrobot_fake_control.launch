@@ -15,13 +15,13 @@
 
   <!-- Robot - Load joint controller configurations from YAML file to parameter server -->
   <group unless="$(arg sim)">
-	  <rosparam file="$(find dextrobot_fake_control)/src/config/$(arg robot_model)_$(arg kinematics)_control.yaml" command="load"/>
+	  <rosparam file="$(find dextrobot_fake_controller)/src/config/$(arg robot_model)_$(arg kinematics)_control.yaml" command="load"/>
 	  <param name="dextrobot_base_control/joint/back_left_wheel_joint/name" value="$(arg prefix)back_left_wheel_joint"/>
 	  <param name="dextrobot_base_control/joint/back_right_wheel_joint/name" value="$(arg prefix)back_right_wheel_joint"/>
 	  <param name="dextrobot_base_control/joint/front_right_wheel_joint/name" value="$(arg prefix)front_right_wheel_joint"/>
 	  <param name="dextrobot_base_control/joint/front_left_wheel_joint/name" value="$(arg prefix)front_left_wheel_joint"/>
 	  <param if="$(eval kinematics == 'x_omni')" name="dextrobot_base_control/joint/aux_upper_base_joint/name" value="$(arg prefix)aux_upper_base_joint"/>
-		<param if="$(eval kinematics == 'x_omni')" name="dextrobot_base_control/joint/upper_base_joint/name" value="$(arg prefix)upper_base_joint"/>
+	  <param if="$(eval kinematics == 'x_omni')" name="dextrobot_base_control/joint/upper_base_joint/name" value="$(arg prefix)upper_base_joint"/>
 	  <param name="dextrobot_base_control/odom_frame" value="$(arg prefix)odom"/>
 	  <param name="dextrobot_base_control/robot_base_frame" value="$(arg prefix)base_footprint"/>
 	  <param name="dextrobot_base_control/wheel_diameter" value="$(arg wheel_diameter)"/>
@@ -37,7 +37,7 @@
   </group>
     <!-- Simulation - Load joint controller configurations from YAML file to parameter server -->
   <group if="$(arg sim)">
-	  <rosparam file="$(find dextrobot_fake_control)/src/config/$(arg prefix)control.yaml" command="load"/>
+	  <rosparam file="$(find dextrobot_fake_controller)/src/config/$(arg prefix)control.yaml" command="load"/>
 
 	  <!-- if robot_localization node is launched the controller must not publish the odom tf-->
 	  <param if="$(arg launch_robot_localization)" name="dextrobot_base_control/enable_odom_tf" value="false"/>
@@ -62,7 +62,7 @@
 
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
-    <rosparam command="load" file="$(find dextrobot_fake_control)/src/config/twist_mux.yaml" />
+    <rosparam command="load" file="$(find dextrobot_fake_controller)/src/config/twist_mux.yaml" />
     <remap from="cmd_vel_out" to="$(arg cmd_vel)" />
   </node>
   <node pkg="twist_mux" type="twist_marker" name="twist_marker">
