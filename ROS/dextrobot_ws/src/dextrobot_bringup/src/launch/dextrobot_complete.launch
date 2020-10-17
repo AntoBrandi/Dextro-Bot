@@ -3,6 +3,7 @@
 
     <arg name="rviz_config" default="$(find dextrobot_controller)/src/rviz/dextrobot_complete.rviz"/>
     <arg name="view_jsp"  default="false" />
+    <arg name="view_imv"  default="false" />
     <arg name="launch_rviz"  default="false" />
 
     <!-- Interface Nodes with the arduino -->
@@ -16,6 +17,8 @@
     </include>
 
     <!-- Vision system -->
-    <include file="$(find dextrobot_vision)/src/launch/dextrobot_vision.launch" />
+    <include file="$(find dextrobot_vision)/src/launch/dextrobot_vision.launch" >
+        <arg name="view_imv"  value="$(arg view_imv)" />
+    </include>
 
 </launch>
