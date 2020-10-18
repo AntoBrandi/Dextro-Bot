@@ -6,8 +6,8 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
 # Motion detections with lower value will be ignored
-X_THRESHOLD = 1500
-Y_THRESHOLD = 1500
+X_THRESHOLD = 2000
+Y_THRESHOLD = 2000
 TIME_TRESHOLD = 4
 # Avoid too fast or too frequent mouvements
 last_msg = 0

@@ -16,7 +16,7 @@
 // Max speed of the steppers in steps per second
 #define MAX_SPEED 600
 // Max acceleration of the steppers in steps per second ^2
-#define MAX_ACCELERATION 500
+#define MAX_ACCELERATION 100
 
 class Stepper
 {
