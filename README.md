@@ -22,10 +22,10 @@
   <p align="center">
     3D printed omni-directional robot with mechanum wheel powered by ROS
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/AntoBrandi/DextroBot/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/AntoBrandi/DextroBot/">View Demo</a>
     ·
     <a href="https://github.com/AntoBrandi/DextroBot/issues">Report Bug</a>
     ·
