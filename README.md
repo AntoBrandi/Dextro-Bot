@@ -13,7 +13,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-   <img src="images/logo.jpg" alt="Logo" width="80" height="80">
+   <img src="images/logo.jpg" alt="Logo" width="200" height="200">
 
   <h3 align="center">DextroBot</h3>
 
