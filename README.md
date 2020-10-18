@@ -186,4 +186,4 @@ My Projects: [https://github.com/AntoBrandi](https://github.com/AntoBrandi)
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/antonio-brandi-512166bb/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/solidworks.jpg
