@@ -77,6 +77,8 @@ This robot is powered by:
 And is controlled by:
 * ROS Kinetic
 
+[![Product Name Screen Shot Exploded][product-screenshot-exploded]](https://example.com)
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -187,3 +189,4 @@ My Projects: [https://github.com/AntoBrandi](https://github.com/AntoBrandi)
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/antonio-brandi-512166bb/
 [product-screenshot]: images/solidworks.jpg
+[product-screenshot-exploded]: images/solidworks-exploded.jpg
