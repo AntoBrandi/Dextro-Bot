@@ -16,28 +16,28 @@ isEnabled = False
 
 def goLeft():
 	twist_left = Twist()
-	twist_left.linear.y = 0.5
+	twist_left.linear.y = 0.3
 	pub.publish(twist_left)
 	rospy.sleep(2)
 	pub.publish(Twist())
 
 def goRight():
 	twist_right = Twist()
-	twist_right.linear.y = -0.5
+	twist_right.linear.y = -0.3
 	pub.publish(twist_right)
 	rospy.sleep(2)
 	pub.publish(Twist())
 
 def goForward():
 	twist_forward = Twist()
-	twist_forward.linear.x = 0.5
+	twist_forward.linear.x = 0.3
 	pub.publish(twist_forward)
 	rospy.sleep(2)
 	pub.publish(Twist())
 
 def goBackward():
 	twist_backward = Twist()
-	twist_backward.linear.x = -0.5
+	twist_backward.linear.x = -0.3
 	pub.publish(twist_backward)
 	rospy.sleep(2)
 	pub.publish(Twist())
