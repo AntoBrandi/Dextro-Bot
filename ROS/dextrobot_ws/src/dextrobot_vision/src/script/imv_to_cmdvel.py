@@ -6,7 +6,7 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
 # Motion detections with lower value will be ignored
-X_THRESHOLD = 2000
+X_THRESHOLD = 1500
 Y_THRESHOLD = 2000
 TIME_TRESHOLD = 4
 # Avoid too fast or too frequent mouvements
@@ -48,28 +48,37 @@ def imv_callback(msg):
 
 	if isEnabled:
 		if (upcoming_msg-last_msg)>=TIME_TRESHOLD:
-			# Move right or left
-			if abs(msg.x)>=abs(msg.y):
-				# Move the robot on its left
-				if msg.x >= X_THRESHOLD:
-					last_msg = upcoming_msg
-					goLeft()
+			# Move the robot on its left
+			if msg.x >= X_THRESHOLD:
+				last_msg = upcoming_msg
+				goLeft()
 
-				# Move the robot on its right
-				if msg.x <= -X_THRESHOLD:
-					last_msg = upcoming_msg
-					goRight()
-			# Move forward or backward
-			else:
-				# Move the robot on its back
-				if msg.y >= Y_THRESHOLD:
-					last_msg = upcoming_msg
-					goBackward()
+			# Move the robot on its right
+			if msg.x <= -X_THRESHOLD:
+				last_msg = upcoming_msg
+				goRight()
+			# # Move right or left
+			# if abs(msg.x)>=abs(msg.y):
+			# 	# Move the robot on its left
+			# 	if msg.x >= X_THRESHOLD:
+			# 		last_msg = upcoming_msg
+			# 		goLeft()
 
-				# Move the robot on its front
-				if msg.y <= -Y_THRESHOLD:
-					last_msg = upcoming_msg
-					goForward()
+			# 	# Move the robot on its right
+			# 	if msg.x <= -X_THRESHOLD:
+			# 		last_msg = upcoming_msg
+			# 		goRight()
+			# # Move forward or backward
+			# else:
+			# 	# Move the robot on its back
+			# 	if msg.y >= Y_THRESHOLD:
+			# 		last_msg = upcoming_msg
+			# 		goBackward()
+
+			# 	# Move the robot on its front
+			# 	if msg.y <= -Y_THRESHOLD:
+			# 		last_msg = upcoming_msg
+			# 		goForward()
 
 def enable_callback(msg):
 	global isEnabled
