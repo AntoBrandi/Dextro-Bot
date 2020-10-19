@@ -31,7 +31,7 @@
   </p>
 </p>
 
-
+[![Product Name Screen Shot Real][product-screenshot-real]](https://example.com)
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -188,3 +188,4 @@ My Projects: [https://github.com/AntoBrandi](https://github.com/AntoBrandi)
 [linkedin-url]: https://www.linkedin.com/in/antonio-brandi-512166bb/
 [product-screenshot]: images/solidworks.jpg
 [product-screenshot-exploded]: images/solidworks-exploded.jpg
+[product-screenshot-real]: images/robot.jpg
