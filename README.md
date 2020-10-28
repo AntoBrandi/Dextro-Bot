@@ -85,7 +85,7 @@ Once it's printed and assembled according and connected, there are few configura
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Make sure you install correctly the following required tools before continuing
 * Install Ubuntu 16.04 on Raspberry Pi 4
 Use the [Ubiquity Robotics](https://downloads.ubiquityrobotics.com/pi.html) Raspberry Pi images that cames along with a lot of pre-installed functionalities such as ROS kinetic, ssh server, GPIO and camera
 drivers
